@@ -13,13 +13,13 @@ class Place:
         maze_grid = Maze.generate(size=5)  # size=5 creates 11x11, size=10 creates 21x21
         cell_size = 5.0
 
-        # Calculate floor size based on maze dimensions
+        # Calculate floor size to match maze dimensions exactly
         maze_rows = len(maze_grid)
         maze_cols = len(maze_grid[0]) if maze_grid else 0
-        floor_size = max(maze_rows, maze_cols) * cell_size + 10.0  # Add padding
+        floor_size = max(maze_rows, maze_cols) * cell_size
 
         # Add floor to the place
-        floor = Floor(size=floor_size, tile_size=1.0)
+        floor = Floor(size=floor_size, tile_size=cell_size)
         self.framework.add_element(floor)
 
         maze = Maze.build(maze_grid, cell_size=cell_size, wall_height=3.0)

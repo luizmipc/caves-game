@@ -4,94 +4,44 @@ from .generator import MazeGenerator
 
 class Maze:
     """
-    Maze class with predefined layouts.
+    Maze generation and building utilities.
 
     Grid symbols:
-    - '.' or ' ' = walkable corridor (creates hallway)
+    - '.' or ' ' = walkable corridor
     - '#' = solid wall block
     - 'S' = start position (walkable)
     - 'E' = end position (walkable)
     """
 
     @staticmethod
-    def simple_corridor():
-        """Simple straight corridor for testing."""
-        return [
-            ['#', '#', '#', '#', '#', '#', '#'],
-            ['#', 'S', '.', '.', '.', '.', '#'],
-            ['#', '#', '#', '#', '#', '#', '#'],
-        ]
-
-    @staticmethod
-    def small_maze():
-        """Small maze with turns and exit opening."""
-        return [
-            ['#', '#', '#', '#', '#', '#', '#', '#', '#'],
-            ['#', 'S', '.', '#', '.', '.', '.', '.', 'E'],
-            ['#', '.', '.', '#', '.', '#', '#', '#', '#'],
-            ['#', '#', '.', '.', '.', '#', '#', '#', '#'],
-            ['#', '#', '#', '#', '.', '.', '.', '.', '#'],
-            ['#', '#', '#', '#', '#', '#', '#', '#', '#'],
-        ]
-
-    @staticmethod
-    def cross_maze():
-        """Maze with cross intersection."""
-        return [
-            ['#', '#', '#', '#', '#', '#', '#'],
-            ['#', '#', '#', 'S', '#', '#', '#'],
-            ['#', '.', '.', '.', '.', '.', '#'],
-            ['#', '#', '#', '.', '#', '#', '#'],
-            ['#', '#', '#', 'E', '#', '#', '#'],
-            ['#', '#', '#', '#', '#', '#', '#'],
-        ]
-
-    @staticmethod
-    def big_maze():
-        """Large maze with multiple paths and turns."""
-        return [
-            ['#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#'],
-            ['#', 'S', '.', '.', '#', '.', '.', '.', '#', '.', '.', '.', '.', '.', '#'],
-            ['#', '#', '#', '.', '#', '.', '#', '.', '#', '.', '#', '#', '#', '.', '#'],
-            ['#', '.', '.', '.', '.', '.', '#', '.', '.', '.', '#', '.', '.', '.', '#'],
-            ['#', '.', '#', '#', '#', '#', '#', '#', '#', '.', '#', '.', '#', '#', '#'],
-            ['#', '.', '.', '.', '.', '.', '.', '.', '#', '.', '.', '.', '.', '.', '#'],
-            ['#', '#', '#', '#', '#', '.', '#', '.', '#', '#', '#', '#', '#', '.', '#'],
-            ['#', '.', '.', '.', '#', '.', '#', '.', '.', '.', '.', '.', '#', '.', '#'],
-            ['#', '.', '#', '.', '#', '.', '#', '#', '#', '#', '#', '.', '#', '.', '#'],
-            ['#', '.', '#', '.', '.', '.', '.', '.', '.', '.', '#', '.', '.', '.', '#'],
-            ['#', '.', '#', '#', '#', '#', '#', '#', '#', '.', '#', '#', '#', '#', '#'],
-            ['#', '.', '.', '.', '.', '.', '.', '.', '#', '.', '.', '.', '.', 'E', 'E'],
-            ['#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#'],
-        ]
-
-    @staticmethod
-    def generate(size=5):
+    def generate(size=5, algorithm='prim'):
         """
         Generate a random square maze.
 
         Args:
             size: Size parameter (creates (2*size+1) x (2*size+1) grid)
                  size=3 -> 7x7, size=5 -> 11x11, size=10 -> 21x21
+            algorithm: 'prim' (default, better branching) or 'backtracking' (long corridors)
 
         Returns:
             list: 2D grid ready for MazeFramework
         """
-        return MazeGenerator.generate(size)
+        return MazeGenerator.generate(size, algorithm)
 
     @staticmethod
-    def generate_rectangular(width=5, height=5):
+    def generate_rectangular(width=5, height=5, algorithm='prim'):
         """
         Generate a random rectangular maze.
 
         Args:
             width: Width in cells
             height: Height in cells
+            algorithm: 'prim' (default, better branching) or 'backtracking' (long corridors)
 
         Returns:
             list: 2D grid ready for MazeFramework
         """
-        return MazeGenerator.generate_rectangular(width, height)
+        return MazeGenerator.generate_rectangular(width, height, algorithm)
 
     @staticmethod
     def build(grid, cell_size=5.0, wall_height=3.0):
