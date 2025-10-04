@@ -78,24 +78,4 @@ class Floor(PlaceElement):
             glVertex3f(-half_size, 0, half_size)
             glEnd()
 
-        # Draw grid lines
-        glBegin(GL_LINES)
-        glColor3f(0.5, 0.5, 0.5)  # Light gray grid lines
-
-        # Lines parallel to X axis
-        z = -half_size
-        while z <= half_size:
-            glVertex3f(-half_size, 0.01, z)
-            glVertex3f(half_size, 0.01, z)
-            z += self.tile_size
-
-        # Lines parallel to Z axis
-        x = -half_size
-        while x <= half_size:
-            glVertex3f(x, 0.01, -half_size)
-            glVertex3f(x, 0.01, half_size)
-            x += self.tile_size
-
-        glEnd()
-
         glPopMatrix()
