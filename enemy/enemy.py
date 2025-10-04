@@ -82,6 +82,9 @@ class Enemy:
             player_x: Player X position
             player_z: Player Z position
             collision_check: Collision checking function
+
+        Returns:
+            bool: True if enemy caught the player, False otherwise
         """
         # Check if we can see the player
         if self.can_see_player(player_x, player_z):
@@ -92,6 +95,10 @@ class Enemy:
             dx = player_x - self.x
             dz = player_z - self.z
             distance = np.sqrt(dx * dx + dz * dz)
+
+            # Check if enemy caught the player
+            if distance < 1.0:  # Caught within 1 unit
+                return True
 
             if distance > 0.5:  # Don't move if too close
                 # Normalize direction
@@ -107,6 +114,8 @@ class Enemy:
                 if collision_check is None or not collision_check(new_x, new_z, radius=0.3):
                     self.x = new_x
                     self.z = new_z
+
+        return False
 
     def render(self, player_x, player_z):
         """

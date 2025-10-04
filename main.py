@@ -182,6 +182,7 @@ def main():
     # Game loop variables
     clock = pygame.time.Clock()
     running = True
+    game_over = False  # Track if game is over
 
     # Credits overlay
     credits_font = pygame.font.Font(None, 40)
@@ -204,20 +205,60 @@ def main():
             elif event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
                     running = False
-                else:
+                elif not game_over:  # Only handle player input if game is not over
                     player.handle_key_down(event.key)
             elif event.type == KEYUP:
-                player.handle_key_up(event.key)
+                if not game_over:  # Only handle player input if game is not over
+                    player.handle_key_up(event.key)
             elif event.type == MOUSEMOTION:
-                player.handle_mouse_motion(event.rel[0], event.rel[1])
+                if not game_over:  # Only handle mouse movement if game is not over
+                    player.handle_mouse_motion(event.rel[0], event.rel[1])
 
         # Update game state
         delta_time = clock.tick(60) / 1000.0  # Convert to seconds
-        player.update(delta_time, collision_check=place.framework.check_collision)
+
+        # Only update player and enemy if game is not over
+        if not game_over:
+            player.update(delta_time, collision_check=place.framework.check_collision)
 
         # Get player position for enemy AI and victory check
         x, y, z = player.get_position()
-        place.update(delta_time, x, z)
+
+        # Only update enemy if game is not over
+        player_caught = False
+        if not game_over:
+            player_caught = place.update(delta_time, x, z)
+
+        # Check if enemy caught the player
+        if player_caught and not show_credits:
+            # Game Over - Play death audio and show game over screen
+            game_over = True  # Set game over flag to freeze player
+            death_audio_path = "assets/audio/death.mp3"
+            if os.path.exists(death_audio_path):
+                try:
+                    pygame.mixer.music.load(death_audio_path)
+                    pygame.mixer.music.play()
+                except Exception as e:
+                    print(f"Could not play death audio: {e}")
+
+            # Generate game over text texture
+            show_credits = True  # Reuse credits overlay system for game over
+            credits_textures = []
+            game_over_font = pygame.font.Font(None, 100)
+            game_over_surf = game_over_font.render("GAME OVER", True, (255, 0, 0))
+
+            # Convert to OpenGL texture
+            texture_data = pygame.image.tostring(game_over_surf, "RGBA", True)
+            tex_width = game_over_surf.get_width()
+            tex_height = game_over_surf.get_height()
+
+            texture_id = glGenTextures(1)
+            glBindTexture(GL_TEXTURE_2D, texture_id)
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, tex_width, tex_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, texture_data)
+
+            credits_textures.append(('game_over', texture_id, tex_width, tex_height))
 
         # Check if player reached the exit (trigger victory once)
         if place.end_pos and not show_credits:
@@ -311,12 +352,12 @@ def main():
             # Draw semi-transparent background box
             glEnable(GL_BLEND)
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
-            glColor4f(0.0, 0.0, 0.0, 0.8)
+            glColor4f(0.0, 0.0, 0.0, 0.7)  # Semi-transparent black
             glBegin(GL_QUADS)
-            glVertex2f(50, 50)
-            glVertex2f(width - 50, 50)
-            glVertex2f(width - 50, 350)
-            glVertex2f(50, 350)
+            glVertex2f(0, 0)
+            glVertex2f(width, 0)
+            glVertex2f(width, height)
+            glVertex2f(0, height)
             glEnd()
 
             # Enable texturing
@@ -329,6 +370,10 @@ def main():
                 glBindTexture(GL_TEXTURE_2D, texture_id)
 
                 x_pos = width // 2 - tex_width // 2  # Center text
+
+                # For game over, center vertically too
+                if text_type == 'game_over':
+                    y_pos = height // 2 - tex_height // 2
 
                 glBegin(GL_QUADS)
                 glTexCoord2f(0, 1)

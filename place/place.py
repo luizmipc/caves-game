@@ -70,9 +70,15 @@ class Place:
                 print(f"Surrounding cells: N='{maze_grid[dead_end_row-1][dead_end_col]}' S='{maze_grid[dead_end_row+1][dead_end_col]}' W='{maze_grid[dead_end_row][dead_end_col-1]}' E='{maze_grid[dead_end_row][dead_end_col+1]}'")
 
     def update(self, delta_time, player_x, player_z):
-        """Update place elements including enemy AI."""
+        """
+        Update place elements including enemy AI.
+
+        Returns:
+            bool: True if player was caught by enemy, False otherwise
+        """
         if self.player_enemy:
-            self.player_enemy.update(delta_time, player_x, player_z, self.framework.check_collision)
+            return self.player_enemy.update(delta_time, player_x, player_z, self.framework.check_collision)
+        return False
 
     def render(self):
         """Render all elements of the place."""
