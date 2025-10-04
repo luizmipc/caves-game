@@ -36,16 +36,17 @@ class Player:
         """Handle key release events."""
         self.movement.handle_key_up(key)
 
-    def update(self, delta_time):
+    def update(self, delta_time, collision_check=None):
         """
         Update player position based on movement state.
 
         Args:
             delta_time: Time elapsed since last frame in seconds
+            collision_check: Optional function(x, z) -> bool to check collisions
         """
         position = (self.x, self.y, self.z)
         yaw = self.camera.get_yaw()
-        self.x, self.y, self.z = self.movement.update(position, yaw, delta_time)
+        self.x, self.y, self.z = self.movement.update(position, yaw, delta_time, collision_check)
 
     def get_view_matrix_rotation(self):
         """

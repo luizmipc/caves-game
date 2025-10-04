@@ -40,7 +40,7 @@ class Movement:
         elif key == pygame.K_d:
             self.moving_right = False
 
-    def update(self, position, yaw, delta_time):
+    def update(self, position, yaw, delta_time, collision_check=None):
         """
         Calculate new position based on movement state and camera yaw.
 
@@ -48,27 +48,33 @@ class Movement:
             position: Current position tuple (x, y, z)
             yaw: Camera yaw angle in degrees
             delta_time: Time elapsed since last frame in seconds
+            collision_check: Optional function(x, z) -> bool to check collisions
 
         Returns:
             tuple: New position (x, y, z)
         """
         x, y, z = position
         yaw_rad = math.radians(yaw)
+        new_x, new_z = x, z
 
         # Forward/backward movement
         if self.moving_forward:
-            x += math.sin(yaw_rad) * self.speed * delta_time
-            z -= math.cos(yaw_rad) * self.speed * delta_time
+            new_x += math.sin(yaw_rad) * self.speed * delta_time
+            new_z -= math.cos(yaw_rad) * self.speed * delta_time
         if self.moving_backward:
-            x -= math.sin(yaw_rad) * self.speed * delta_time
-            z += math.cos(yaw_rad) * self.speed * delta_time
+            new_x -= math.sin(yaw_rad) * self.speed * delta_time
+            new_z += math.cos(yaw_rad) * self.speed * delta_time
 
         # Strafe left/right movement
         if self.moving_left:
-            x -= math.cos(yaw_rad) * self.speed * delta_time
-            z -= math.sin(yaw_rad) * self.speed * delta_time
+            new_x -= math.cos(yaw_rad) * self.speed * delta_time
+            new_z -= math.sin(yaw_rad) * self.speed * delta_time
         if self.moving_right:
-            x += math.cos(yaw_rad) * self.speed * delta_time
-            z += math.sin(yaw_rad) * self.speed * delta_time
+            new_x += math.cos(yaw_rad) * self.speed * delta_time
+            new_z += math.sin(yaw_rad) * self.speed * delta_time
+
+        # Check collision before applying movement
+        if collision_check is None or not collision_check(new_x, new_z):
+            x, z = new_x, new_z
 
         return (x, y, z)

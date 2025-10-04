@@ -44,8 +44,13 @@ def main():
     setup_opengl(width, height)
 
     # Create game objects
-    player = Player(x=0, y=1.7, z=5)
     place = Place()
+
+    # Use maze start position if available, otherwise default
+    if place.start_pos:
+        player = Player(x=place.start_pos[0], y=place.start_pos[1], z=place.start_pos[2])
+    else:
+        player = Player(x=0, y=1.7, z=5)
 
     # Game loop variables
     clock = pygame.time.Clock()
@@ -68,7 +73,7 @@ def main():
 
         # Update game state
         delta_time = clock.tick(60) / 1000.0  # Convert to seconds
-        player.update(delta_time)
+        player.update(delta_time, collision_check=place.framework.check_collision)
 
         # Render
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
