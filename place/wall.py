@@ -1,9 +1,13 @@
 from OpenGL.GL import *
 from .framework import PlaceElement
 from collision.framework import Collidable
+import pygame
+import os
 
 
 class Wall(PlaceElement, Collidable):
+    TEXTURE_PATH = "assets/textures/wall.png"
+
     def __init__(self, x=0.0, z=0.0, width=5.0, height=3.0, depth=0.2):
         """
         Initialize a wall that occupies grid squares.
@@ -20,6 +24,34 @@ class Wall(PlaceElement, Collidable):
         self.width = width
         self.height = height
         self.depth = depth
+        self.texture_id = self._load_texture()
+
+    @classmethod
+    def _load_texture(cls):
+        """Load wall texture if it exists."""
+        if not os.path.exists(cls.TEXTURE_PATH):
+            return None
+
+        try:
+            texture_surface = pygame.image.load(cls.TEXTURE_PATH)
+            texture_surface = texture_surface.convert_alpha()
+
+            # Flip texture vertically for OpenGL
+            texture_data = pygame.image.tostring(texture_surface, "RGBA", 1)
+            width = texture_surface.get_width()
+            height = texture_surface.get_height()
+
+            texture_id = glGenTextures(1)
+            glBindTexture(GL_TEXTURE_2D, texture_id)
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT)
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT)
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, texture_data)
+            return texture_id
+        except Exception as e:
+            print(f"Could not load wall texture: {e}")
+            return None
 
     def create_ceiling(self, depth=5.0):
         """
@@ -75,42 +107,94 @@ class Wall(PlaceElement, Collidable):
         half_height = self.height / 2
         half_depth = self.depth / 2
 
-        # Wall color
-        glColor3f(0.6, 0.4, 0.2)  # Brown color
+        if self.texture_id:
+            glEnable(GL_TEXTURE_2D)
+            glBindTexture(GL_TEXTURE_2D, self.texture_id)
+            glColor3f(1.0, 1.0, 1.0)  # White to show texture as-is
+        else:
+            glColor3f(0.6, 0.4, 0.2)  # Brown color
 
-        # Draw the wall as a box
+        # Draw the wall as a box with proper normals
         glBegin(GL_QUADS)
 
-        # Front face
+        # Front face (normal pointing towards +Z)
+        glNormal3f(0.0, 0.0, 1.0)
+        if self.texture_id:
+            glTexCoord2f(0, 0)
         glVertex3f(self.x - half_width, 0, self.z + half_depth)
+        if self.texture_id:
+            glTexCoord2f(1, 0)
         glVertex3f(self.x + half_width, 0, self.z + half_depth)
+        if self.texture_id:
+            glTexCoord2f(1, 1)
         glVertex3f(self.x + half_width, self.height, self.z + half_depth)
+        if self.texture_id:
+            glTexCoord2f(0, 1)
         glVertex3f(self.x - half_width, self.height, self.z + half_depth)
 
-        # Back face
+        # Back face (normal pointing towards -Z)
+        glNormal3f(0.0, 0.0, -1.0)
+        if self.texture_id:
+            glTexCoord2f(0, 0)
         glVertex3f(self.x - half_width, 0, self.z - half_depth)
+        if self.texture_id:
+            glTexCoord2f(0, 1)
         glVertex3f(self.x - half_width, self.height, self.z - half_depth)
+        if self.texture_id:
+            glTexCoord2f(1, 1)
         glVertex3f(self.x + half_width, self.height, self.z - half_depth)
+        if self.texture_id:
+            glTexCoord2f(1, 0)
         glVertex3f(self.x + half_width, 0, self.z - half_depth)
 
-        # Left face
+        # Left face (normal pointing towards -X)
+        glNormal3f(-1.0, 0.0, 0.0)
+        if self.texture_id:
+            glTexCoord2f(0, 0)
         glVertex3f(self.x - half_width, 0, self.z - half_depth)
+        if self.texture_id:
+            glTexCoord2f(1, 0)
         glVertex3f(self.x - half_width, 0, self.z + half_depth)
+        if self.texture_id:
+            glTexCoord2f(1, 1)
         glVertex3f(self.x - half_width, self.height, self.z + half_depth)
+        if self.texture_id:
+            glTexCoord2f(0, 1)
         glVertex3f(self.x - half_width, self.height, self.z - half_depth)
 
-        # Right face
+        # Right face (normal pointing towards +X)
+        glNormal3f(1.0, 0.0, 0.0)
+        if self.texture_id:
+            glTexCoord2f(0, 0)
         glVertex3f(self.x + half_width, 0, self.z - half_depth)
+        if self.texture_id:
+            glTexCoord2f(0, 1)
         glVertex3f(self.x + half_width, self.height, self.z - half_depth)
+        if self.texture_id:
+            glTexCoord2f(1, 1)
         glVertex3f(self.x + half_width, self.height, self.z + half_depth)
+        if self.texture_id:
+            glTexCoord2f(1, 0)
         glVertex3f(self.x + half_width, 0, self.z + half_depth)
 
-        # Top face
+        # Top face (normal pointing towards +Y)
+        glNormal3f(0.0, 1.0, 0.0)
+        if self.texture_id:
+            glTexCoord2f(0, 0)
         glVertex3f(self.x - half_width, self.height, self.z - half_depth)
+        if self.texture_id:
+            glTexCoord2f(0, 1)
         glVertex3f(self.x - half_width, self.height, self.z + half_depth)
+        if self.texture_id:
+            glTexCoord2f(1, 1)
         glVertex3f(self.x + half_width, self.height, self.z + half_depth)
+        if self.texture_id:
+            glTexCoord2f(1, 0)
         glVertex3f(self.x + half_width, self.height, self.z - half_depth)
 
         glEnd()
+
+        if self.texture_id:
+            glDisable(GL_TEXTURE_2D)
 
         glPopMatrix()

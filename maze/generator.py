@@ -5,6 +5,41 @@ class MazeGenerator:
     """Generate mazes using various algorithms."""
 
     @staticmethod
+    def find_dead_ends(grid):
+        """
+        Find all dead ends in the maze (cells with only one exit).
+
+        Args:
+            grid: 2D maze grid
+
+        Returns:
+            list: List of (row, col) tuples representing dead end positions
+        """
+        dead_ends = []
+        rows = len(grid)
+        cols = len(grid[0]) if rows > 0 else 0
+
+        for row in range(1, rows - 1):
+            for col in range(1, cols - 1):
+                if grid[row][col] in ['.', 'S', 'E']:
+                    # Count open neighbors
+                    open_neighbors = 0
+                    if grid[row - 1][col] in ['.', 'S', 'E']:
+                        open_neighbors += 1
+                    if grid[row + 1][col] in ['.', 'S', 'E']:
+                        open_neighbors += 1
+                    if grid[row][col - 1] in ['.', 'S', 'E']:
+                        open_neighbors += 1
+                    if grid[row][col + 1] in ['.', 'S', 'E']:
+                        open_neighbors += 1
+
+                    # Dead end has exactly 1 neighbor
+                    if open_neighbors == 1 and grid[row][col] not in ['S', 'E']:
+                        dead_ends.append((row, col))
+
+        return dead_ends
+
+    @staticmethod
     def generate(size=5, algorithm='prim'):
         """
         Generate a square maze using specified algorithm.
