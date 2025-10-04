@@ -16,14 +16,14 @@ class LightingConfig:
     LIGHT_RANGE = 15.0
 
     # Spotlight properties
-    SPOT_CUTOFF_ANGLE = 25.0  # degrees - reduced cone angle
+    SPOT_CUTOFF_ANGLE = 35.0  # degrees - wider cone for broader coverage
     SPOT_EXPONENT = 0.5  # Slightly sharper edges for better defined light cone with smooth falloff
     PITCH_ANGLE_OFFSET = 0.0  # no offset - point exactly where player looks
 
     # Light intensity (RGB values) - enhanced warm color temperature for torch-like realism
     DIFFUSE_COLOR = np.array([12.0, 11.5, 10.5, 1.0], dtype=np.float32)  # Increased brightness for stronger impact
-    AMBIENT_COLOR = np.array([4.0, 3.7, 3.2, 1.0], dtype=np.float32)  # Warmer ambient for realistic close-range glow
-    SPECULAR_COLOR = np.array([5.5, 4.8, 3.9, 1.0], dtype=np.float32)  # Enhanced specular with warm highlights
+    AMBIENT_COLOR = np.array([5.0, 4.7, 4.2, 1.0], dtype=np.float32)  # Higher ambient for stronger environmental impact
+    SPECULAR_COLOR = np.array([6.5, 5.8, 4.8, 1.0], dtype=np.float32)  # Stronger specular for pronounced highlights
 
     # Global ambient (higher for visibility when extremely close to surfaces)
     GLOBAL_AMBIENT = np.array([0.2, 0.2, 0.2, 1.0], dtype=np.float32)
