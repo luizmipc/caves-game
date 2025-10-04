@@ -1,5 +1,6 @@
 from .framework import PlaceFramework
 from .floor import Floor
+from .outside import Outside
 from maze.maze import Maze
 from maze.generator import MazeGenerator
 from player.player_enemy import PlayerEnemy
@@ -23,6 +24,10 @@ class Place:
         maze_rows = len(maze_grid)
         maze_cols = len(maze_grid[0]) if maze_grid else 0
         floor_size = max(maze_rows, maze_cols) * cell_size
+
+        # Add outside environment (grass, sky, walls)
+        self.outside = Outside(maze_size=floor_size)
+        self.framework.add_element(self.outside)
 
         # Add floor to the place
         floor = Floor(size=floor_size, tile_size=cell_size)

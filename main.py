@@ -97,10 +97,10 @@ def setup_opengl(width, height):
     glEnable(GL_DEPTH_TEST)
     glViewport(0, 0, width, height)
 
-    # Set up perspective projection
+    # Set up perspective projection with far clipping plane extended for outside environment
     glMatrixMode(GL_PROJECTION)
     glLoadIdentity()
-    gluPerspective(45, width / height, 0.1, 100.0)
+    gluPerspective(45, width / height, 0.1, 1000.0)  # Increased from 100 to 1000
 
     glMatrixMode(GL_MODELVIEW)
 
