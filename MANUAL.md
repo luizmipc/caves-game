@@ -19,14 +19,28 @@
 - numpy
 
 ### Installation
+
+1. **Create a virtual environment:**
 ```bash
-pip install PyOpenGL PyOpenGL_accelerate pygame numpy
+python -m venv venv
+```
+
+2. **Activate the virtual environment:**
+```bash
+source venv/bin/activate
+```
+
+3. **Install dependencies:**
+```bash
+pip install -r requirements.txt
 ```
 
 ### Running the Game
 ```bash
 python main.py
 ```
+
+**Note**: Make sure the virtual environment is activated (you should see `(venv)` in your terminal prompt) before running the game.
 
 ### Main Menu
 When you launch the game, you'll see the main menu with three options:
