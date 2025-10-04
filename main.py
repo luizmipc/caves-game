@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Crazy Backrooms - A 3D maze game with first-person player movement.
+Dreamrooms - A 3D maze game with first-person player movement.
 Controls:
 - WASD: Move around
 - Mouse: Look around
@@ -48,7 +48,7 @@ def update_music():
 def show_config(width, height):
     """Show the config screen and return when done."""
     screen = pygame.display.set_mode((width, height))
-    pygame.display.set_caption("Crazy Backrooms - Config")
+    pygame.display.set_caption("Dreamrooms - Config")
 
     config_screen = ConfigScreen(width, height)
     clock = pygame.time.Clock()
@@ -73,7 +73,7 @@ def show_config(width, height):
 def show_menu(width, height):
     """Show the main menu and return user choice."""
     screen = pygame.display.set_mode((width, height))
-    pygame.display.set_caption("Crazy Backrooms - Menu")
+    pygame.display.set_caption("Dreamrooms - Menu")
 
     menu = Menu(width, height)
     clock = pygame.time.Clock()
@@ -131,7 +131,7 @@ def main():
 
     # Setup game
     pygame.display.set_mode((width, height), DOUBLEBUF | OPENGL)
-    pygame.display.set_caption("Crazy Backrooms - WASD to move, Mouse to look")
+    pygame.display.set_caption("Dreamrooms - WASD to move, Mouse to look")
 
     # Hide and capture mouse
     pygame.mouse.set_visible(False)
@@ -172,6 +172,10 @@ def main():
         delta_time = clock.tick(60) / 1000.0  # Convert to seconds
         player.update(delta_time, collision_check=place.framework.check_collision)
 
+        # Get player position for enemy AI
+        x, y, z = player.get_position()
+        place.update(delta_time, x, z)
+
         # Render
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         glLoadIdentity()
@@ -181,11 +185,13 @@ def main():
         glRotatef(pitch, 1, 0, 0)
         glRotatef(yaw, 0, 1, 0)
 
-        x, y, z = player.get_position()
         glTranslatef(-x, -y, -z)
 
         # Render the scene
         place.render()
+
+        # Render enemy (needs to be rendered separately for billboard)
+        place.render_enemy(x, z)
 
         pygame.display.flip()
 

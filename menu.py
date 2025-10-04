@@ -110,7 +110,7 @@ class Menu:
             screen.fill(self.bg_color)
 
         # Draw title
-        title_text = self.title_font.render("CRAZY BACKROOMS", True, self.title_color)
+        title_text = self.title_font.render("DREAMROOMS", True, self.title_color)
         title_x = self.width // 2 - title_text.get_width() // 2
         title_y = self.height // 3
         screen.blit(title_text, (title_x, title_y))
