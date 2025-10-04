@@ -221,9 +221,10 @@ def main():
             if distance_to_exit < 2.0:  # Player is close to exit
                 # Victory! Start outro music and show credits overlay
                 show_credits = True
-                if os.path.exists(VictoryScreen.OUTRO_MUSIC_PATH):
+                autro_path = "assets/audio/autro.mp3"
+                if os.path.exists(autro_path):
                     try:
-                        pygame.mixer.music.load(VictoryScreen.OUTRO_MUSIC_PATH)
+                        pygame.mixer.music.load(autro_path)
                         pygame.mixer.music.play(-1)
                     except Exception as e:
                         print(f"Could not load outro music: {e}")
