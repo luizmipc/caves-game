@@ -1,17 +1,30 @@
 #!/usr/bin/env python3
 """
 Dreamrooms - A 3D maze game with first-person player movement.
+
+A liminal horror experience inspired by:
+- Backrooms/Liminal Spaces
+- Dreamcore aesthetics
+- David Lynch (Twin Peaks, Lost Highway)
+- David Bowie's experimental art
+
 Controls:
 - WASD: Move around
 - Mouse: Look around
 - ESC: Exit
 """
 
+# Standard library imports
+import os
+
+# Third-party imports
 import pygame
 from pygame.locals import *
 from OpenGL.GL import *
 from OpenGL.GLU import *
+import numpy as np
 
+# Game module imports
 from player.player import Player
 from place.place import Place
 from menu import Menu
@@ -19,58 +32,89 @@ from config_screen import ConfigScreen
 from victory_screen import VictoryScreen
 from config import game_config
 from light.light import LightBall
-import os
-import numpy as np
 
 
+# Path to background music file
 SOUNDTRACK_PATH = "assets/audio/soundtrack.mp3"
 
 
 def load_soundtrack():
-    """Load and play soundtrack in loop if it exists."""
+    """
+    Load and play background soundtrack in an infinite loop.
+
+    The soundtrack plays during gameplay to create atmosphere.
+    If the file doesn't exist, the game continues without music.
+    """
     if os.path.exists(SOUNDTRACK_PATH):
         try:
+            # Initialize pygame's audio mixer
             pygame.mixer.init()
+            # Load the music file
             pygame.mixer.music.load(SOUNDTRACK_PATH)
+            # Set volume based on config
             pygame.mixer.music.set_volume(game_config.music_volume)
+            # Play in loop if music is enabled (-1 = infinite loop)
             if game_config.music_enabled:
-                pygame.mixer.music.play(-1)  # -1 means loop forever
+                pygame.mixer.music.play(-1)
         except Exception as e:
             print(f"Could not load soundtrack: {e}")
 
 
 def update_music():
-    """Update music based on config settings."""
+    """
+    Update music playback based on current config settings.
+
+    Called from config screen to apply changes without restarting.
+    Handles volume adjustments and enable/disable toggling.
+    """
+    # Update volume to match current config
     pygame.mixer.music.set_volume(game_config.music_volume)
+
+    # Start music if enabled and not already playing
     if game_config.music_enabled and not pygame.mixer.music.get_busy():
         pygame.mixer.music.play(-1)
+    # Stop music if disabled and currently playing
     elif not game_config.music_enabled and pygame.mixer.music.get_busy():
         pygame.mixer.music.stop()
 
 
 def show_config(width, height):
-    """Show the config screen and return when done."""
+    """
+    Display the configuration/settings screen.
+
+    Args:
+        width: Window width in pixels
+        height: Window height in pixels
+
+    Returns:
+        str: Action to take ('menu' to return to menu, 'quit' to exit game)
+    """
+    # Create 2D display for config UI
     screen = pygame.display.set_mode((width, height))
     pygame.display.set_caption("Dreamrooms - Config")
 
     config_screen = ConfigScreen(width, height)
     clock = pygame.time.Clock()
 
+    # Config screen loop
     while True:
+        # Handle events (mouse clicks, keyboard, window close)
         for event in pygame.event.get():
             if event.type == QUIT:
                 return 'quit'
 
+            # Let config screen handle the event
             action = config_screen.handle_event(event)
             if action == 'back':
                 return 'menu'
 
-        # Update music settings
+        # Apply music setting changes in real-time
         update_music()
 
+        # Draw config screen UI
         config_screen.render(screen)
         pygame.display.flip()
-        clock.tick(60)
+        clock.tick(60)  # 60 FPS
 
 
 def show_victory(width, height):
@@ -120,27 +164,51 @@ def show_menu(width, height):
 
 
 def setup_opengl(width, height):
-    """Initialize OpenGL settings."""
+    """
+    Initialize OpenGL rendering settings for 3D view.
+
+    Sets up the perspective camera and enables depth testing.
+
+    Args:
+        width: Window width in pixels
+        height: Window height in pixels
+    """
+    # Enable depth testing for proper 3D occlusion
     glEnable(GL_DEPTH_TEST)
+
+    # Set the viewport to match window dimensions
     glViewport(0, 0, width, height)
 
-    # Set up perspective projection with far clipping plane extended for outside environment
+    # Configure perspective projection matrix
     glMatrixMode(GL_PROJECTION)
     glLoadIdentity()
-    gluPerspective(45, width / height, 0.1, 1000.0)  # Increased from 100 to 1000
+    # FOV=45°, aspect ratio, near=0.1, far=1000 (extended for outside environment)
+    gluPerspective(45, width / height, 0.1, 1000.0)
 
+    # Switch back to modelview matrix for rendering
     glMatrixMode(GL_MODELVIEW)
 
 
 def main():
-    # Initialize Pygame
+    """
+    Main entry point for Dreamrooms.
+
+    Game Flow:
+    1. Initialize Pygame and audio
+    2. Show main menu (Play/Config/Quit)
+    3. If Play selected, generate maze and start game loop
+    4. Game loop: Handle input, update physics/AI, render 3D scene
+    5. Victory (reach exit) or Game Over (caught by enemy)
+    6. Exit to operating system
+    """
+    # ===== INITIALIZATION =====
     pygame.init()
     width, height = 800, 600
 
-    # Load and play soundtrack
+    # Load and play background soundtrack
     load_soundtrack()
 
-    # Menu loop
+    # ===== MENU LOOP =====
     while True:
         action = show_menu(width, height)
 
@@ -148,43 +216,48 @@ def main():
             pygame.quit()
             return
         elif action == 'config':
+            # Show settings screen
             config_action = show_config(width, height)
             if config_action == 'quit':
                 pygame.quit()
                 return
-            # If 'menu', loop continues to show menu again
+            # If 'menu' returned, loop continues to show menu again
         elif action == 'play':
             break  # Exit menu loop and start game
 
-    # Setup game
+    # ===== GAME SETUP =====
+
+    # Create OpenGL context with double buffering
     pygame.display.set_mode((width, height), DOUBLEBUF | OPENGL)
     pygame.display.set_caption("Dreamrooms - WASD to move, Mouse to look")
 
-    # Hide and capture mouse
+    # Hide mouse cursor and lock it to window for FPS controls
     pygame.mouse.set_visible(False)
     pygame.event.set_grab(True)
 
-    # Setup OpenGL
+    # Initialize OpenGL settings (perspective, depth test)
     setup_opengl(width, height)
 
-    # Create game objects
+    # Create the game world (maze, floor, walls, enemy)
     place = Place()
 
-    # Use maze start position if available, otherwise default
+    # Spawn player at maze start position
     if place.start_pos:
         player = Player(x=place.start_pos[0], y=place.start_pos[1], z=place.start_pos[2])
     else:
+        # Fallback position if no start defined
         player = Player(x=0, y=1.7, z=5)
 
-    # Create light ball
+    # Create the player's light source (torch-like spotlight)
+    # Parameters: distance from player, height offset, visual radius, light range
     light_ball = LightBall(distance=0.8, height_offset=-0.5, radius=0.15, light_range=15.0)
 
-    # Game loop variables
-    clock = pygame.time.Clock()
-    running = True
-    game_over = False  # Track if game is over
+    # ===== GAME LOOP VARIABLES =====
+    clock = pygame.time.Clock()  # For frame rate control
+    running = True  # Main loop control
+    game_over = False  # Becomes True when enemy catches player
 
-    # Credits overlay
+    # Victory/Game Over overlay system
     credits_font = pygame.font.Font(None, 40)
     credits_lines = [
         "Credits:",
@@ -194,37 +267,46 @@ def main():
         "Matheus Soares Martins",
         "Thiago Crivaro Nunes"
     ]
-    show_credits = False
-    credits_textures = []  # Store OpenGL textures for credits text
+    show_credits = False  # Toggle for victory/game over overlay
+    credits_textures = []  # OpenGL textures for text rendering
 
+    # ===== MAIN GAME LOOP =====
     while running:
-        # Handle events
+        # ===== EVENT HANDLING =====
         for event in pygame.event.get():
             if event.type == QUIT:
                 running = False
+
             elif event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
+                    # ESC always works (even during game over)
                     running = False
-                elif not game_over:  # Only handle player input if game is not over
+                elif not game_over:
+                    # Only process player input if game is still active
                     player.handle_key_down(event.key)
+
             elif event.type == KEYUP:
-                if not game_over:  # Only handle player input if game is not over
+                if not game_over:
+                    # Release key (stop movement)
                     player.handle_key_up(event.key)
+
             elif event.type == MOUSEMOTION:
-                if not game_over:  # Only handle mouse movement if game is not over
+                if not game_over:
+                    # Update camera rotation based on mouse movement
                     player.handle_mouse_motion(event.rel[0], event.rel[1])
 
-        # Update game state
-        delta_time = clock.tick(60) / 1000.0  # Convert to seconds
+        # ===== UPDATE PHASE =====
+        # Calculate frame time for smooth physics (60 FPS target)
+        delta_time = clock.tick(60) / 1000.0  # Convert milliseconds to seconds
 
-        # Only update player and enemy if game is not over
+        # Update player movement and physics (only if game is active)
         if not game_over:
             player.update(delta_time, collision_check=place.framework.check_collision)
 
-        # Get player position for enemy AI and victory check
+        # Get current player position for AI and victory detection
         x, y, z = player.get_position()
 
-        # Only update enemy if game is not over
+        # Update enemy AI and check if player was caught
         player_caught = False
         if not game_over:
             player_caught = place.update(delta_time, x, z)
