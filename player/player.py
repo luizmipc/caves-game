@@ -1,5 +1,5 @@
-from camera import Camera
-from movement import Movement
+from .camera import Camera
+from .movement import Movement
 
 
 class Player:

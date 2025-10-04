@@ -12,8 +12,8 @@ from pygame.locals import *
 from OpenGL.GL import *
 from OpenGL.GLU import *
 
-from player import Player
-from place import Place
+from player.player import Player
+from place.place import Place
 
 
 def setup_opengl(width, height):
