@@ -187,10 +187,11 @@ def main():
     credits_font = pygame.font.Font(None, 40)
     credits_lines = [
         "Credits:",
-        "Sarah Mitchell - Game Director",
-        "Alex Chen - Lead Programmer",
-        "Marcus Rodriguez - Level Designer",
-        "Emily Thompson - Sound Designer"
+        "Game Developers:",
+        "Luiz Marcelo Itapicuru Pereira Costa",
+        "Matheus Soares Martins",
+        "Leonardo Zordan Lima",
+        "Thiago Crivaro Nunes"
     ]
     show_credits = False
     credits_textures = []  # Store OpenGL textures for credits text

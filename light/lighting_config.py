@@ -10,28 +10,28 @@ class LightingConfig:
     """Configuration settings for the lighting system."""
 
     # Light ball physical properties
-    DISTANCE_FROM_PLAYER = 0.8
-    HEIGHT_OFFSET = -0.5
+    DISTANCE_FROM_PLAYER = 0.2  # Very close to player, almost inside
+    HEIGHT_OFFSET = 0.0  # At eye level
     BALL_RADIUS = 0.15
     LIGHT_RANGE = 15.0
 
     # Spotlight properties
-    SPOT_CUTOFF_ANGLE = 25.0  # degrees
-    SPOT_EXPONENT = 1.0  # soft falloff
-    PITCH_ANGLE_OFFSET = -25.0  # tilt up 25 degrees
+    SPOT_CUTOFF_ANGLE = 20.0  # degrees
+    SPOT_EXPONENT = 0.5  # very soft falloff for better spread
+    PITCH_ANGLE_OFFSET = 0.0  # no offset - point exactly where player looks
 
     # Light intensity (RGB values)
-    DIFFUSE_COLOR = np.array([8.0, 7.8, 7.5, 1.0], dtype=np.float32)
-    AMBIENT_COLOR = np.array([1.5, 1.5, 1.5, 1.0], dtype=np.float32)
-    SPECULAR_COLOR = np.array([3.0, 2.9, 2.7, 1.0], dtype=np.float32)
+    DIFFUSE_COLOR = np.array([10.0, 9.8, 9.5, 1.0], dtype=np.float32)
+    AMBIENT_COLOR = np.array([2.0, 2.0, 2.0, 1.0], dtype=np.float32)  # High ambient for close surfaces
+    SPECULAR_COLOR = np.array([4.0, 3.9, 3.7, 1.0], dtype=np.float32)
 
-    # Global ambient (pure darkness)
-    GLOBAL_AMBIENT = np.array([0.0, 0.0, 0.0, 1.0], dtype=np.float32)
+    # Global ambient (slight glow around light to illuminate very close surfaces)
+    GLOBAL_AMBIENT = np.array([0.1, 0.1, 0.1, 1.0], dtype=np.float32)
 
-    # Attenuation (controls light falloff with distance)
-    CONSTANT_ATTENUATION = 1.0
-    LINEAR_ATTENUATION_FACTOR = 2.0
-    QUADRATIC_ATTENUATION_FACTOR = 3.0
+    # Attenuation (controls light falloff with distance) - reduced for better close-range illumination
+    CONSTANT_ATTENUATION = 0.5
+    LINEAR_ATTENUATION_FACTOR = 1.0
+    QUADRATIC_ATTENUATION_FACTOR = 1.5
 
     # Material properties
     MATERIAL_AMBIENT = np.array([0.2, 0.2, 0.2, 1.0], dtype=np.float32)
