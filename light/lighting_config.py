@@ -28,10 +28,10 @@ class LightingConfig:
     # Global ambient (higher for visibility when extremely close to surfaces)
     GLOBAL_AMBIENT = np.array([0.2, 0.2, 0.2, 1.0], dtype=np.float32)
 
-    # Attenuation (controls light falloff with distance) - optimized for close-range functionality
-    CONSTANT_ATTENUATION = 0.15  # Very low for maximum close-range brightness
-    LINEAR_ATTENUATION_FACTOR = 0.5  # Reduced for smoother mid-range transitions
-    QUADRATIC_ATTENUATION_FACTOR = 1.5  # Increased for more natural inverse-square law behavior
+    # Attenuation (controls light falloff with distance) - optimized for broader reach
+    CONSTANT_ATTENUATION = 0.1  # Even lower for maximum brightness and reach
+    LINEAR_ATTENUATION_FACTOR = 0.4  # Further reduced for extended light range
+    QUADRATIC_ATTENUATION_FACTOR = 1.2  # Reduced for slower falloff at distance
 
     # Material properties - optimized for realistic surface interaction
     MATERIAL_AMBIENT = np.array([0.28, 0.26, 0.23, 1.0], dtype=np.float32)  # Warmer ambient response
