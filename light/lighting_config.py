@@ -21,7 +21,7 @@ class LightingConfig:
     PITCH_ANGLE_OFFSET = 0.0  # no offset - point exactly where player looks
 
     # Light intensity (RGB values) - enhanced warm color temperature for torch-like realism
-    DIFFUSE_COLOR = np.array([10.0, 9.5, 8.8, 1.0], dtype=np.float32)  # Warmer with more orange tint
+    DIFFUSE_COLOR = np.array([12.0, 11.5, 10.5, 1.0], dtype=np.float32)  # Increased brightness for stronger impact
     AMBIENT_COLOR = np.array([4.0, 3.7, 3.2, 1.0], dtype=np.float32)  # Warmer ambient for realistic close-range glow
     SPECULAR_COLOR = np.array([5.5, 4.8, 3.9, 1.0], dtype=np.float32)  # Enhanced specular with warm highlights
 
@@ -35,7 +35,7 @@ class LightingConfig:
 
     # Material properties - optimized for realistic surface interaction
     MATERIAL_AMBIENT = np.array([0.28, 0.26, 0.23, 1.0], dtype=np.float32)  # Warmer ambient response
-    MATERIAL_DIFFUSE = np.array([0.85, 0.85, 0.85, 1.0], dtype=np.float32)  # Higher diffuse for better light absorption
+    MATERIAL_DIFFUSE = np.array([0.95, 0.95, 0.95, 1.0], dtype=np.float32)  # Maximum diffuse for strong light response
     MATERIAL_SPECULAR = np.array([0.5, 0.45, 0.35, 1.0], dtype=np.float32)  # Stronger warm specular highlights
     MATERIAL_SHININESS = 12.0  # Lower shininess for broader, softer highlights
 
