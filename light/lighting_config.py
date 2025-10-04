@@ -44,6 +44,13 @@ class LightingConfig:
     GLOW_OUTER_COLOR = np.array([1.0, 0.9, 0.6, 0.3], dtype=np.float32)
     GLOW_OUTER_SIZE_MULTIPLIER = 1.5
 
+    # Fog properties for depth perception
+    FOG_ENABLED = True
+    FOG_COLOR = np.array([0.0, 0.0, 0.0, 1.0], dtype=np.float32)  # Pure black fog for darkness
+    FOG_DENSITY = 0.08  # Subtle density for gradual distance fade
+    FOG_START = 5.0  # Start fading at 5 units
+    FOG_END = 15.0  # Complete darkness at 15 units (matches light range)
+
     # Collision detection
     COLLISION_CHECK_RADIUS = 0.2
     MIN_DISTANCE_FROM_WALL = 0.3

@@ -25,6 +25,24 @@ class LightingSetup:
         glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE)
 
     @staticmethod
+    def setup_fog(fog_color, fog_start, fog_end, fog_density):
+        """
+        Setup fog for depth perception.
+
+        Args:
+            fog_color: Fog color [r, g, b, a]
+            fog_start: Distance where fog starts
+            fog_end: Distance where fog is complete
+            fog_density: Fog density (for exponential fog)
+        """
+        glEnable(GL_FOG)
+        glFogi(GL_FOG_MODE, GL_LINEAR)  # Linear fog for predictable falloff
+        glFogfv(GL_FOG_COLOR, fog_color)
+        glFogf(GL_FOG_START, fog_start)
+        glFogf(GL_FOG_END, fog_end)
+        glHint(GL_FOG_HINT, GL_NICEST)  # Best quality fog
+
+    @staticmethod
     def setup_spotlight(position, direction, cutoff_angle, exponent,
                        diffuse_color, ambient_color, specular_color,
                        constant_atten, linear_atten, quadratic_atten):
@@ -102,3 +120,4 @@ class LightingSetup:
         glDisable(GL_LIGHT0)
         glDisable(GL_COLOR_MATERIAL)
         glDisable(GL_NORMALIZE)
+        glDisable(GL_FOG)

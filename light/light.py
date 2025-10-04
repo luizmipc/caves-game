@@ -80,6 +80,15 @@ class LightBall:
         # Setup global lighting parameters
         LightingSetup.setup_global_lighting(self.config.GLOBAL_AMBIENT)
 
+        # Setup fog for depth perception
+        if self.config.FOG_ENABLED:
+            LightingSetup.setup_fog(
+                self.config.FOG_COLOR,
+                self.config.FOG_START,
+                self.config.FOG_END,
+                self.config.FOG_DENSITY
+            )
+
         # Calculate spotlight direction (with pitch offset)
         adjusted_pitch = pitch + self.config.PITCH_ANGLE_OFFSET
         direction = calculate_direction_vector(yaw, adjusted_pitch)
