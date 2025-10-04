@@ -16,6 +16,33 @@ from player.player import Player
 from place.place import Place
 from menu import Menu
 from config_screen import ConfigScreen
+from config import game_config
+import os
+
+
+SOUNDTRACK_PATH = "assets/audio/soundtrack.mp3"
+
+
+def load_soundtrack():
+    """Load and play soundtrack in loop if it exists."""
+    if os.path.exists(SOUNDTRACK_PATH):
+        try:
+            pygame.mixer.init()
+            pygame.mixer.music.load(SOUNDTRACK_PATH)
+            pygame.mixer.music.set_volume(game_config.music_volume)
+            if game_config.music_enabled:
+                pygame.mixer.music.play(-1)  # -1 means loop forever
+        except Exception as e:
+            print(f"Could not load soundtrack: {e}")
+
+
+def update_music():
+    """Update music based on config settings."""
+    pygame.mixer.music.set_volume(game_config.music_volume)
+    if game_config.music_enabled and not pygame.mixer.music.get_busy():
+        pygame.mixer.music.play(-1)
+    elif not game_config.music_enabled and pygame.mixer.music.get_busy():
+        pygame.mixer.music.stop()
 
 
 def show_config(width, height):
@@ -34,6 +61,9 @@ def show_config(width, height):
             action = config_screen.handle_event(event)
             if action == 'back':
                 return 'menu'
+
+        # Update music settings
+        update_music()
 
         config_screen.render(screen)
         pygame.display.flip()
@@ -79,6 +109,9 @@ def main():
     # Initialize Pygame
     pygame.init()
     width, height = 800, 600
+
+    # Load and play soundtrack
+    load_soundtrack()
 
     # Menu loop
     while True:
