@@ -2,7 +2,7 @@ from OpenGL.GL import *
 from OpenGL.GLU import *
 import pygame
 import os
-import math
+import numpy as np
 
 
 class PlayerEnemy:
@@ -68,7 +68,7 @@ class PlayerEnemy:
         """
         dx = player_x - self.x
         dz = player_z - self.z
-        distance = math.sqrt(dx * dx + dz * dz)
+        distance = np.sqrt(dx * dx + dz * dz)
         return distance <= self.detection_range
 
     def update(self, delta_time, player_x, player_z, collision_check=None):
@@ -89,7 +89,7 @@ class PlayerEnemy:
         if self.is_chasing:
             dx = player_x - self.x
             dz = player_z - self.z
-            distance = math.sqrt(dx * dx + dz * dz)
+            distance = np.sqrt(dx * dx + dz * dz)
 
             if distance > 0.5:  # Don't move if too close
                 # Normalize direction
@@ -122,7 +122,7 @@ class PlayerEnemy:
         # Billboard: always face the player
         dx = player_x - self.x
         dz = player_z - self.z
-        angle = math.atan2(dx, dz) * 180.0 / math.pi
+        angle = np.arctan2(dx, dz) * 180.0 / np.pi
         glRotatef(-angle, 0, 1, 0)
 
         # Enable transparency

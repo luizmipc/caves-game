@@ -93,7 +93,8 @@ class Ceiling(PlaceElement):
 
         glBegin(GL_QUADS)
 
-        # Bottom face (visible from below)
+        # Bottom face (visible from below) - normal pointing down
+        glNormal3f(0.0, -1.0, 0.0)
         if self.texture_id:
             glTexCoord2f(0, 0)
         glVertex3f(self.x - half_width, self.y, self.z - half_depth)
@@ -107,7 +108,8 @@ class Ceiling(PlaceElement):
             glTexCoord2f(0, 1)
         glVertex3f(self.x - half_width, self.y, self.z + half_depth)
 
-        # Top face
+        # Top face - normal pointing up
+        glNormal3f(0.0, 1.0, 0.0)
         if self.texture_id:
             glTexCoord2f(0, 0)
         glVertex3f(self.x - half_width, self.y + 0.1, self.z - half_depth)
@@ -126,7 +128,8 @@ class Ceiling(PlaceElement):
         # Draw edges for thickness
         glBegin(GL_QUADS)
 
-        # Front edge
+        # Front edge - normal pointing towards +Z
+        glNormal3f(0.0, 0.0, 1.0)
         if self.texture_id:
             glTexCoord2f(0, 0)
         glVertex3f(self.x - half_width, self.y, self.z + half_depth)
@@ -140,7 +143,8 @@ class Ceiling(PlaceElement):
             glTexCoord2f(0, 1)
         glVertex3f(self.x - half_width, self.y + 0.1, self.z + half_depth)
 
-        # Back edge
+        # Back edge - normal pointing towards -Z
+        glNormal3f(0.0, 0.0, -1.0)
         if self.texture_id:
             glTexCoord2f(0, 0)
         glVertex3f(self.x - half_width, self.y, self.z - half_depth)
@@ -154,7 +158,8 @@ class Ceiling(PlaceElement):
             glTexCoord2f(1, 0)
         glVertex3f(self.x + half_width, self.y, self.z - half_depth)
 
-        # Left edge
+        # Left edge - normal pointing towards -X
+        glNormal3f(-1.0, 0.0, 0.0)
         if self.texture_id:
             glTexCoord2f(0, 0)
         glVertex3f(self.x - half_width, self.y, self.z - half_depth)
@@ -168,7 +173,8 @@ class Ceiling(PlaceElement):
             glTexCoord2f(0, 1)
         glVertex3f(self.x - half_width, self.y + 0.1, self.z - half_depth)
 
-        # Right edge
+        # Right edge - normal pointing towards +X
+        glNormal3f(1.0, 0.0, 0.0)
         if self.texture_id:
             glTexCoord2f(0, 0)
         glVertex3f(self.x + half_width, self.y, self.z - half_depth)

@@ -18,8 +18,9 @@ from menu import Menu
 from config_screen import ConfigScreen
 from victory_screen import VictoryScreen
 from config import game_config
+from light.light import LightBall
 import os
-import math
+import numpy as np
 
 
 SOUNDTRACK_PATH = "assets/audio/soundtrack.mp3"
@@ -175,6 +176,9 @@ def main():
     else:
         player = Player(x=0, y=1.7, z=5)
 
+    # Create light ball
+    light_ball = LightBall(distance=0.8, height_offset=-0.5, radius=0.15, light_range=15.0)
+
     # Game loop variables
     clock = pygame.time.Clock()
     running = True
@@ -217,7 +221,7 @@ def main():
         # Check if player reached the exit (trigger victory once)
         if place.end_pos and not show_credits:
             exit_x, exit_y, exit_z = place.end_pos
-            distance_to_exit = math.sqrt((x - exit_x)**2 + (z - exit_z)**2)
+            distance_to_exit = np.sqrt((x - exit_x)**2 + (z - exit_z)**2)
             if distance_to_exit < 2.0:  # Player is close to exit
                 # Victory! Start outro music and show credits overlay
                 show_credits = True
@@ -264,11 +268,30 @@ def main():
 
         glTranslatef(-x, -y, -z)
 
+        # Update and render light ball (sets up lighting and renders the glowing orb)
+        # If victory, set max ambient light to reveal the entire maze
+        if show_credits:
+            glEnable(GL_LIGHTING)
+            glEnable(GL_LIGHT0)
+            glLightModelfv(GL_LIGHT_MODEL_AMBIENT, [1.0, 1.0, 1.0, 1.0])  # Max ambient
+            glLightfv(GL_LIGHT0, GL_DIFFUSE, [0.0, 0.0, 0.0, 1.0])  # Disable spotlight
+            glEnable(GL_COLOR_MATERIAL)
+            glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)
+        else:
+            light_ball.update_and_render(x, y, z, yaw, pitch, collision_check=place.framework.check_collision)
+
         # Render the scene
         place.render()
 
         # Render enemy (needs to be rendered separately for billboard)
         place.render_enemy(x, z)
+
+        # Disable lighting before UI rendering
+        if not show_credits:
+            light_ball.disable_lighting()
+        else:
+            glDisable(GL_LIGHTING)
+            glDisable(GL_LIGHT0)
 
         # Draw credits overlay if victory triggered (2D overlay using OpenGL)
         if show_credits and credits_textures:

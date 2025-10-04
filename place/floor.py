@@ -57,6 +57,7 @@ class Floor(PlaceElement):
             glBindTexture(GL_TEXTURE_2D, self.texture_id)
             glColor3f(1.0, 1.0, 1.0)  # White to show texture as-is
             glBegin(GL_QUADS)
+            glNormal3f(0.0, 1.0, 0.0)  # Normal pointing up for proper lighting
             glTexCoord2f(0, 0)
             glVertex3f(-half_size, 0, -half_size)
             glTexCoord2f(self.size / self.tile_size, 0)
@@ -70,6 +71,7 @@ class Floor(PlaceElement):
         else:
             glBegin(GL_QUADS)
             glColor3f(0.3, 0.3, 0.3)  # Dark gray floor
+            glNormal3f(0.0, 1.0, 0.0)  # Normal pointing up for proper lighting
             glVertex3f(-half_size, 0, -half_size)
             glVertex3f(half_size, 0, -half_size)
             glVertex3f(half_size, 0, half_size)

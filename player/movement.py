@@ -1,4 +1,4 @@
-import math
+import numpy as np
 import pygame
 
 
@@ -54,24 +54,24 @@ class Movement:
             tuple: New position (x, y, z)
         """
         x, y, z = position
-        yaw_rad = math.radians(yaw)
+        yaw_rad = np.radians(yaw)
         new_x, new_z = x, z
 
         # Forward/backward movement
         if self.moving_forward:
-            new_x += math.sin(yaw_rad) * self.speed * delta_time
-            new_z -= math.cos(yaw_rad) * self.speed * delta_time
+            new_x += np.sin(yaw_rad) * self.speed * delta_time
+            new_z -= np.cos(yaw_rad) * self.speed * delta_time
         if self.moving_backward:
-            new_x -= math.sin(yaw_rad) * self.speed * delta_time
-            new_z += math.cos(yaw_rad) * self.speed * delta_time
+            new_x -= np.sin(yaw_rad) * self.speed * delta_time
+            new_z += np.cos(yaw_rad) * self.speed * delta_time
 
         # Strafe left/right movement
         if self.moving_left:
-            new_x -= math.cos(yaw_rad) * self.speed * delta_time
-            new_z -= math.sin(yaw_rad) * self.speed * delta_time
+            new_x -= np.cos(yaw_rad) * self.speed * delta_time
+            new_z -= np.sin(yaw_rad) * self.speed * delta_time
         if self.moving_right:
-            new_x += math.cos(yaw_rad) * self.speed * delta_time
-            new_z += math.sin(yaw_rad) * self.speed * delta_time
+            new_x += np.cos(yaw_rad) * self.speed * delta_time
+            new_z += np.sin(yaw_rad) * self.speed * delta_time
 
         # Check collision before applying movement
         if collision_check is None or not collision_check(new_x, new_z):

@@ -73,6 +73,7 @@ class Outside(PlaceElement):
         # Draw ground with lots of texture repeats
         tile_repeat = 50
         glBegin(GL_QUADS)
+        glNormal3f(0.0, 1.0, 0.0)  # Normal pointing up
         if self.grass_texture:
             glTexCoord2f(0, 0)
         glVertex3f(-half_size, -0.01, -half_size)

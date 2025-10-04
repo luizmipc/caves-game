@@ -114,10 +114,11 @@ class Wall(PlaceElement, Collidable):
         else:
             glColor3f(0.6, 0.4, 0.2)  # Brown color
 
-        # Draw the wall as a box
+        # Draw the wall as a box with proper normals
         glBegin(GL_QUADS)
 
-        # Front face
+        # Front face (normal pointing towards +Z)
+        glNormal3f(0.0, 0.0, 1.0)
         if self.texture_id:
             glTexCoord2f(0, 0)
         glVertex3f(self.x - half_width, 0, self.z + half_depth)
@@ -131,7 +132,8 @@ class Wall(PlaceElement, Collidable):
             glTexCoord2f(0, 1)
         glVertex3f(self.x - half_width, self.height, self.z + half_depth)
 
-        # Back face
+        # Back face (normal pointing towards -Z)
+        glNormal3f(0.0, 0.0, -1.0)
         if self.texture_id:
             glTexCoord2f(0, 0)
         glVertex3f(self.x - half_width, 0, self.z - half_depth)
@@ -145,7 +147,8 @@ class Wall(PlaceElement, Collidable):
             glTexCoord2f(1, 0)
         glVertex3f(self.x + half_width, 0, self.z - half_depth)
 
-        # Left face
+        # Left face (normal pointing towards -X)
+        glNormal3f(-1.0, 0.0, 0.0)
         if self.texture_id:
             glTexCoord2f(0, 0)
         glVertex3f(self.x - half_width, 0, self.z - half_depth)
@@ -159,7 +162,8 @@ class Wall(PlaceElement, Collidable):
             glTexCoord2f(0, 1)
         glVertex3f(self.x - half_width, self.height, self.z - half_depth)
 
-        # Right face
+        # Right face (normal pointing towards +X)
+        glNormal3f(1.0, 0.0, 0.0)
         if self.texture_id:
             glTexCoord2f(0, 0)
         glVertex3f(self.x + half_width, 0, self.z - half_depth)
@@ -173,7 +177,8 @@ class Wall(PlaceElement, Collidable):
             glTexCoord2f(1, 0)
         glVertex3f(self.x + half_width, 0, self.z + half_depth)
 
-        # Top face
+        # Top face (normal pointing towards +Y)
+        glNormal3f(0.0, 1.0, 0.0)
         if self.texture_id:
             glTexCoord2f(0, 0)
         glVertex3f(self.x - half_width, self.height, self.z - half_depth)

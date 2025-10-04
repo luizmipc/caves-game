@@ -4,7 +4,7 @@ Creates a directional light cone illuminating what's ahead of the player.
 """
 
 from OpenGL.GL import *
-import math
+import numpy as np
 
 
 class Lantern:
@@ -45,13 +45,13 @@ class Lantern:
 
         # Calculate direction vector from yaw and pitch
         # Convert angles to radians
-        yaw_rad = math.radians(yaw)
-        pitch_rad = math.radians(pitch)
+        yaw_rad = np.radians(yaw)
+        pitch_rad = np.radians(pitch)
 
         # Calculate direction (where player is looking)
-        dir_x = math.sin(yaw_rad) * math.cos(pitch_rad)
-        dir_y = -math.sin(pitch_rad)
-        dir_z = -math.cos(yaw_rad) * math.cos(pitch_rad)
+        dir_x = np.sin(yaw_rad) * np.cos(pitch_rad)
+        dir_y = -np.sin(pitch_rad)
+        dir_z = -np.cos(yaw_rad) * np.cos(pitch_rad)
 
         # Set spotlight direction
         glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, [dir_x, dir_y, dir_z])
