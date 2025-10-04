@@ -27,7 +27,10 @@ class Floor(PlaceElement):
 
         try:
             texture_surface = pygame.image.load(self.TEXTURE_PATH)
-            texture_data = pygame.image.tostring(texture_surface, "RGB", True)
+            texture_surface = texture_surface.convert_alpha()
+
+            # Flip texture vertically for OpenGL
+            texture_data = pygame.image.tostring(texture_surface, "RGBA", 1)
             width = texture_surface.get_width()
             height = texture_surface.get_height()
 
@@ -35,7 +38,9 @@ class Floor(PlaceElement):
             glBindTexture(GL_TEXTURE_2D, self.texture_id)
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, texture_data)
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT)
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT)
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, texture_data)
         except Exception as e:
             print(f"Could not load floor texture: {e}")
             self.texture_id = None
