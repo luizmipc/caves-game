@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Simple 3D game with floor and first-person player movement.
+Crazy Backrooms - A 3D maze game with first-person player movement.
 Controls:
 - WASD: Move around
 - Mouse: Look around
@@ -14,6 +14,52 @@ from OpenGL.GLU import *
 
 from player.player import Player
 from place.place import Place
+from menu import Menu
+from config_screen import ConfigScreen
+
+
+def show_config(width, height):
+    """Show the config screen and return when done."""
+    screen = pygame.display.set_mode((width, height))
+    pygame.display.set_caption("Crazy Backrooms - Config")
+
+    config_screen = ConfigScreen(width, height)
+    clock = pygame.time.Clock()
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                return 'quit'
+
+            action = config_screen.handle_event(event)
+            if action == 'back':
+                return 'menu'
+
+        config_screen.render(screen)
+        pygame.display.flip()
+        clock.tick(60)
+
+
+def show_menu(width, height):
+    """Show the main menu and return user choice."""
+    screen = pygame.display.set_mode((width, height))
+    pygame.display.set_caption("Crazy Backrooms - Menu")
+
+    menu = Menu(width, height)
+    clock = pygame.time.Clock()
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                return 'quit'
+
+            action = menu.handle_event(event)
+            if action:
+                return action
+
+        menu.render(screen)
+        pygame.display.flip()
+        clock.tick(60)
 
 
 def setup_opengl(width, height):
@@ -33,8 +79,26 @@ def main():
     # Initialize Pygame
     pygame.init()
     width, height = 800, 600
+
+    # Menu loop
+    while True:
+        action = show_menu(width, height)
+
+        if action == 'quit':
+            pygame.quit()
+            return
+        elif action == 'config':
+            config_action = show_config(width, height)
+            if config_action == 'quit':
+                pygame.quit()
+                return
+            # If 'menu', loop continues to show menu again
+        elif action == 'play':
+            break  # Exit menu loop and start game
+
+    # Setup game
     pygame.display.set_mode((width, height), DOUBLEBUF | OPENGL)
-    pygame.display.set_caption("Caves Game - WASD to move, Mouse to look")
+    pygame.display.set_caption("Crazy Backrooms - WASD to move, Mouse to look")
 
     # Hide and capture mouse
     pygame.mouse.set_visible(False)

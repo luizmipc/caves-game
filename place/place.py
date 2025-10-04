@@ -1,6 +1,7 @@
 from .framework import PlaceFramework
 from .floor import Floor
 from maze.maze import Maze
+from config import game_config
 
 
 class Place:
@@ -8,9 +9,9 @@ class Place:
         """Initialize the place/environment using the framework."""
         self.framework = PlaceFramework()
 
-        # Generate and add a random maze
+        # Generate and add a random maze using config size
         from maze.maze import Maze
-        maze_grid = Maze.generate(size=5)  # size=5 creates 11x11, size=10 creates 21x21
+        maze_grid = Maze.generate(size=game_config.maze_size)  # size from config (1-10)
         cell_size = 5.0
 
         # Calculate floor size to match maze dimensions exactly
