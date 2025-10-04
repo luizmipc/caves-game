@@ -10,19 +10,19 @@ class LightingConfig:
     """Configuration settings for the lighting system."""
 
     # Light ball physical properties
-    DISTANCE_FROM_PLAYER = 0.2  # Very close to player, almost inside
-    HEIGHT_OFFSET = 0.0  # At eye level
+    DISTANCE_FROM_PLAYER = -1.2  # Behind player for hidden light source
+    HEIGHT_OFFSET = -0.3  # Below eye level for better immersion (hidden from view)
     BALL_RADIUS = 0.15
     LIGHT_RANGE = 15.0
 
     # Spotlight properties
-    SPOT_CUTOFF_ANGLE = 20.0  # degrees
+    SPOT_CUTOFF_ANGLE = 30.0  # degrees - wider cone for better ceiling/wall visibility
     SPOT_EXPONENT = 0.3  # Very soft edges - creates gradual transition at cone boundary
     PITCH_ANGLE_OFFSET = 0.0  # no offset - point exactly where player looks
 
     # Light intensity (RGB values) - warm color temperature for atmospheric scattering
     DIFFUSE_COLOR = np.array([10.0, 9.8, 9.5, 1.0], dtype=np.float32)
-    AMBIENT_COLOR = np.array([2.2, 2.1, 1.9, 1.0], dtype=np.float32)  # Subtle warm glow for scattered light
+    AMBIENT_COLOR = np.array([3.0, 2.9, 2.7, 1.0], dtype=np.float32)  # Higher ambient for better surface visibility
     SPECULAR_COLOR = np.array([5.0, 4.5, 3.8, 1.0], dtype=np.float32)  # Enhanced specular for light scattering effect
 
     # Global ambient (slight glow around light to illuminate very close surfaces)
@@ -52,6 +52,6 @@ class LightingConfig:
     FOG_END = 15.0  # Complete darkness at 15 units (matches light range)
 
     # Collision detection
-    COLLISION_CHECK_RADIUS = 0.2
-    MIN_DISTANCE_FROM_WALL = 0.3
-    DISTANCE_STEP = 0.1
+    COLLISION_CHECK_RADIUS = 0.15
+    MIN_DISTANCE_FROM_WALL = 0.1  # Reduced to allow closer approach to surfaces
+    DISTANCE_STEP = 0.05
