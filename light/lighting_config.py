@@ -17,13 +17,13 @@ class LightingConfig:
 
     # Spotlight properties
     SPOT_CUTOFF_ANGLE = 25.0  # degrees - reduced cone angle
-    SPOT_EXPONENT = 0.3  # Very soft edges - creates gradual transition at cone boundary
+    SPOT_EXPONENT = 0.5  # Slightly sharper edges for better defined light cone with smooth falloff
     PITCH_ANGLE_OFFSET = 0.0  # no offset - point exactly where player looks
 
-    # Light intensity (RGB values) - warm color temperature for atmospheric scattering
-    DIFFUSE_COLOR = np.array([10.0, 9.8, 9.5, 1.0], dtype=np.float32)
-    AMBIENT_COLOR = np.array([4.0, 3.9, 3.7, 1.0], dtype=np.float32)  # Very high ambient for close-range visibility
-    SPECULAR_COLOR = np.array([5.0, 4.5, 3.8, 1.0], dtype=np.float32)  # Enhanced specular for light scattering effect
+    # Light intensity (RGB values) - enhanced warm color temperature for torch-like realism
+    DIFFUSE_COLOR = np.array([10.0, 9.5, 8.8, 1.0], dtype=np.float32)  # Warmer with more orange tint
+    AMBIENT_COLOR = np.array([4.0, 3.7, 3.2, 1.0], dtype=np.float32)  # Warmer ambient for realistic close-range glow
+    SPECULAR_COLOR = np.array([5.5, 4.8, 3.9, 1.0], dtype=np.float32)  # Enhanced specular with warm highlights
 
     # Global ambient (higher for visibility when extremely close to surfaces)
     GLOBAL_AMBIENT = np.array([0.2, 0.2, 0.2, 1.0], dtype=np.float32)
@@ -33,23 +33,23 @@ class LightingConfig:
     LINEAR_ATTENUATION_FACTOR = 0.5  # Reduced for smoother mid-range transitions
     QUADRATIC_ATTENUATION_FACTOR = 1.5  # Increased for more natural inverse-square law behavior
 
-    # Material properties - adjusted for light scattering
-    MATERIAL_AMBIENT = np.array([0.25, 0.24, 0.22, 1.0], dtype=np.float32)  # Slight warm tint
-    MATERIAL_DIFFUSE = np.array([0.8, 0.8, 0.8, 1.0], dtype=np.float32)
-    MATERIAL_SPECULAR = np.array([0.4, 0.35, 0.3, 1.0], dtype=np.float32)  # Enhanced for scattering glow
-    MATERIAL_SHININESS = 15.0  # Lower shininess for softer, more scattered highlights
+    # Material properties - optimized for realistic surface interaction
+    MATERIAL_AMBIENT = np.array([0.28, 0.26, 0.23, 1.0], dtype=np.float32)  # Warmer ambient response
+    MATERIAL_DIFFUSE = np.array([0.85, 0.85, 0.85, 1.0], dtype=np.float32)  # Higher diffuse for better light absorption
+    MATERIAL_SPECULAR = np.array([0.5, 0.45, 0.35, 1.0], dtype=np.float32)  # Stronger warm specular highlights
+    MATERIAL_SHININESS = 12.0  # Lower shininess for broader, softer highlights
 
-    # Ball glow properties
-    GLOW_CORE_COLOR = np.array([1.0, 1.0, 0.8, 1.0], dtype=np.float32)
-    GLOW_OUTER_COLOR = np.array([1.0, 0.9, 0.6, 0.3], dtype=np.float32)
-    GLOW_OUTER_SIZE_MULTIPLIER = 1.5
+    # Ball glow properties - enhanced warm gradient
+    GLOW_CORE_COLOR = np.array([1.0, 0.95, 0.75, 1.0], dtype=np.float32)  # Warmer core
+    GLOW_OUTER_COLOR = np.array([1.0, 0.85, 0.5, 0.4], dtype=np.float32)  # More orange outer glow
+    GLOW_OUTER_SIZE_MULTIPLIER = 1.6  # Slightly larger outer glow for softer transition
 
     # Fog properties for depth perception
     FOG_ENABLED = True
     FOG_COLOR = np.array([0.0, 0.0, 0.0, 1.0], dtype=np.float32)  # Pure black fog for darkness
-    FOG_DENSITY = 0.08  # Subtle density for gradual distance fade
-    FOG_START = 5.0  # Start fading at 5 units
-    FOG_END = 15.0  # Complete darkness at 15 units (matches light range)
+    FOG_DENSITY = 0.1  # Slightly increased for more pronounced atmospheric effect
+    FOG_START = 4.0  # Start fading earlier for smoother transition
+    FOG_END = 14.0  # Slightly reduced for better depth perception
 
     # Collision detection
     COLLISION_CHECK_RADIUS = 0.15
