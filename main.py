@@ -188,9 +188,9 @@ def main():
     credits_lines = [
         "Credits:",
         "Game Developers:",
+        "Leonardo Zordan Lima",
         "Luiz Marcelo Itapicuru Pereira Costa",
         "Matheus Soares Martins",
-        "Leonardo Zordan Lima",
         "Thiago Crivaro Nunes"
     ]
     show_credits = False
