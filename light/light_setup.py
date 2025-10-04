@@ -86,11 +86,14 @@ class LightingSetup:
         glEnable(GL_COLOR_MATERIAL)
         glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)
 
-        # Enable normal normalization
-        glEnable(GL_NORMALIZE)
+        # Enable automatic normal rescaling for better lighting accuracy
+        glEnable(GL_RESCALE_NORMAL)  # More efficient than GL_NORMALIZE
 
-        # Enable smooth shading
+        # Enable smooth shading for gradual light transitions
         glShadeModel(GL_SMOOTH)
+
+        # Enable local viewer for more accurate specular highlights
+        glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE)
 
     @staticmethod
     def disable_lighting():

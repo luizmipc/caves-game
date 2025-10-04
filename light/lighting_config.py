@@ -17,27 +17,27 @@ class LightingConfig:
 
     # Spotlight properties
     SPOT_CUTOFF_ANGLE = 20.0  # degrees
-    SPOT_EXPONENT = 0.5  # very soft falloff for better spread
+    SPOT_EXPONENT = 0.3  # Very soft edges - creates gradual transition at cone boundary
     PITCH_ANGLE_OFFSET = 0.0  # no offset - point exactly where player looks
 
-    # Light intensity (RGB values)
+    # Light intensity (RGB values) - warm color temperature for atmospheric scattering
     DIFFUSE_COLOR = np.array([10.0, 9.8, 9.5, 1.0], dtype=np.float32)
-    AMBIENT_COLOR = np.array([2.0, 2.0, 2.0, 1.0], dtype=np.float32)  # High ambient for close surfaces
-    SPECULAR_COLOR = np.array([4.0, 3.9, 3.7, 1.0], dtype=np.float32)
+    AMBIENT_COLOR = np.array([2.2, 2.1, 1.9, 1.0], dtype=np.float32)  # Subtle warm glow for scattered light
+    SPECULAR_COLOR = np.array([5.0, 4.5, 3.8, 1.0], dtype=np.float32)  # Enhanced specular for light scattering effect
 
     # Global ambient (slight glow around light to illuminate very close surfaces)
     GLOBAL_AMBIENT = np.array([0.1, 0.1, 0.1, 1.0], dtype=np.float32)
 
-    # Attenuation (controls light falloff with distance) - reduced for better close-range illumination
-    CONSTANT_ATTENUATION = 0.5
-    LINEAR_ATTENUATION_FACTOR = 1.0
-    QUADRATIC_ATTENUATION_FACTOR = 1.5
+    # Attenuation (controls light falloff with distance) - optimized for smooth, realistic falloff
+    CONSTANT_ATTENUATION = 0.25  # Even lower for broader light spread at source
+    LINEAR_ATTENUATION_FACTOR = 0.6  # Reduced for smoother mid-range transitions
+    QUADRATIC_ATTENUATION_FACTOR = 1.5  # Increased for more natural inverse-square law behavior
 
-    # Material properties
-    MATERIAL_AMBIENT = np.array([0.2, 0.2, 0.2, 1.0], dtype=np.float32)
+    # Material properties - adjusted for light scattering
+    MATERIAL_AMBIENT = np.array([0.25, 0.24, 0.22, 1.0], dtype=np.float32)  # Slight warm tint
     MATERIAL_DIFFUSE = np.array([0.8, 0.8, 0.8, 1.0], dtype=np.float32)
-    MATERIAL_SPECULAR = np.array([0.3, 0.3, 0.3, 1.0], dtype=np.float32)
-    MATERIAL_SHININESS = 20.0
+    MATERIAL_SPECULAR = np.array([0.4, 0.35, 0.3, 1.0], dtype=np.float32)  # Enhanced for scattering glow
+    MATERIAL_SHININESS = 15.0  # Lower shininess for softer, more scattered highlights
 
     # Ball glow properties
     GLOW_CORE_COLOR = np.array([1.0, 1.0, 0.8, 1.0], dtype=np.float32)
