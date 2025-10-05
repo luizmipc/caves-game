@@ -1,25 +1,25 @@
 """
-Maze Framework for building mazes from grid layouts.
+Framework de Labirinto para construir labirintos a partir de layouts de grade.
 
-Grid symbols:
-- ' ' or '.' = walkable corridor (creates hallway segments)
-- '#' = solid wall block
-- 'S' = start position (walkable)
-- 'E' = end position (walkable)
+Símbolos da grade:
+- ' ' ou '.' = corredor transitável (cria segmentos de corredor)
+- '#' = bloco de parede sólida
+- 'S' = posição inicial (transitável)
+- 'E' = posição final (transitável)
 """
 
 
 class MazeFramework:
-    """Framework for building mazes from ASCII grid layouts."""
+    """Framework para construir labirintos a partir de layouts de grade ASCII."""
 
     def __init__(self, grid, cell_size=5.0, wall_height=3.0):
         """
-        Initialize maze framework.
+        Inicializa framework de labirinto.
 
         Args:
-            grid: 2D list of strings representing the maze layout
-            cell_size: Size of each grid cell (width/length)
-            wall_height: Height of walls and hallways
+            grid: Lista 2D de strings representando o layout do labirinto
+            cell_size: Tamanho de cada célula da grade (largura/comprimento)
+            wall_height: Altura das paredes e corredores
         """
         self.grid = grid
         self.cell_size = cell_size
@@ -29,30 +29,30 @@ class MazeFramework:
 
     def get_world_position(self, row, col):
         """
-        Convert grid position to world coordinates.
+        Converte posição da grade para coordenadas do mundo.
 
         Args:
-            row: Grid row
-            col: Grid column
+            row: Linha da grade
+            col: Coluna da grade
 
         Returns:
-            tuple: (x, z) world position
+            tuple: Posição (x, z) no mundo
         """
-        # Center the maze at origin
+        # Centraliza o labirinto na origem
         x = (col - self.cols / 2) * self.cell_size
         z = (row - self.rows / 2) * self.cell_size
         return (x, z)
 
     def is_walkable(self, cell):
-        """Check if a cell is walkable."""
+        """Verifica se uma célula é transitável."""
         return cell in ['.', ' ', 'S', 'E']
 
     def parse(self):
         """
-        Parse the grid and create walls/ceiling for the maze.
+        Analisa a grade e cria paredes/teto para o labirinto.
 
         Returns:
-            dict: Dictionary with 'walls', 'ceiling', 'start', 'end' positions
+            dict: Dicionário com posições 'walls', 'ceiling', 'start', 'end'
         """
         from place.wall import Wall
         from place.ceiling import Ceiling
@@ -62,11 +62,11 @@ class MazeFramework:
         end_pos = None
         ceiling = None
 
-        # Find maze bounds for ceiling
+        # Encontra limites do labirinto para o teto
         min_x = min_z = float('inf')
         max_x = max_z = float('-inf')
 
-        # First pass: find bounds and mark positions
+        # Primeira passagem: encontra limites e marca posições
         for row in range(self.rows):
             for col in range(self.cols):
                 cell = self.grid[row][col]
@@ -84,7 +84,7 @@ class MazeFramework:
                         end_pos = (x, 1.7, z)
 
                 elif cell == '#':
-                    # Create wall blocks for solid walls
+                    # Cria blocos de parede para paredes sólidas
                     wall = Wall(
                         x=x, z=z,
                         width=self.cell_size,
@@ -93,7 +93,7 @@ class MazeFramework:
                     )
                     walls.append(wall)
 
-        # Create one large ceiling over all walkable areas
+        # Cria um grande teto sobre todas as áreas transitáveis
         if min_x != float('inf'):
             ceiling_x = (min_x + max_x) / 2
             ceiling_z = (min_z + max_z) / 2
@@ -117,10 +117,10 @@ class MazeFramework:
 
     def add_to_framework(self, place_framework):
         """
-        Add all maze elements to a place framework.
+        Adiciona todos os elementos do labirinto a um framework de lugar.
 
         Args:
-            place_framework: PlaceFramework instance to add elements to
+            place_framework: Instância de PlaceFramework para adicionar elementos
         """
         elements = self.parse()
 

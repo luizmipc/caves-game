@@ -1,6 +1,6 @@
 """
-Shader module for lighting effects in the game.
-Implements a flashlight/torch effect for dark maze exploration.
+Módulo de shader para efeitos de iluminação no jogo.
+Implementa um efeito de lanterna/tocha para exploração de labirinto escuro.
 """
 
 from OpenGL.GL import *
@@ -8,9 +8,9 @@ from OpenGL.GL import shaders
 
 
 class LightingShader:
-    """Simple lighting shader for flashlight effect."""
+    """Shader de iluminação simples para efeito de lanterna."""
 
-    # Vertex shader - passes position and calculates distance
+    # Vertex shader - passa posição e calcula distância
     VERTEX_SHADER = """
     #version 120
     varying vec3 fragPosition;
@@ -21,7 +21,7 @@ class LightingShader:
     }
     """
 
-    # Fragment shader - creates flashlight effect
+    # Fragment shader - cria efeito de lanterna
     FRAGMENT_SHADER = """
     #version 120
     uniform vec3 playerPosition;
@@ -41,10 +41,10 @@ class LightingShader:
 
     def __init__(self, light_radius=10.0):
         """
-        Initialize the lighting shader.
+        Inicializa o shader de iluminação.
 
         Args:
-            light_radius: Radius of the flashlight effect
+            light_radius: Raio do efeito de lanterna
         """
         self.light_radius = light_radius
         self.shader_program = None
@@ -59,33 +59,33 @@ class LightingShader:
             print("Falling back to fixed-function pipeline")
 
     def _compile_shaders(self):
-        """Compile vertex and fragment shaders."""
+        """Compila shaders de vértice e fragmento."""
         vertex_shader = shaders.compileShader(self.VERTEX_SHADER, GL_VERTEX_SHADER)
         fragment_shader = shaders.compileShader(self.FRAGMENT_SHADER, GL_FRAGMENT_SHADER)
 
         self.shader_program = shaders.compileProgram(vertex_shader, fragment_shader)
 
-        # Get uniform locations
+        # Obtém localizações de uniformes
         self.player_pos_location = glGetUniformLocation(self.shader_program, b"playerPosition")
         self.light_radius_location = glGetUniformLocation(self.shader_program, b"lightRadius")
         self.base_color_location = glGetUniformLocation(self.shader_program, b"baseColor")
 
     def use(self, player_x, player_y, player_z, base_color=(1.0, 1.0, 1.0)):
         """
-        Activate the shader with player position.
+        Ativa o shader com a posição do jogador.
 
         Args:
-            player_x: Player X position
-            player_y: Player Y position
-            player_z: Player Z position
-            base_color: RGB color tuple for lit surfaces
+            player_x: Posição X do jogador
+            player_y: Posição Y do jogador
+            player_z: Posição Z do jogador
+            base_color: Tupla de cor RGB para superfícies iluminadas
         """
         if self.shader_program is None:
             return
 
         shaders.glUseProgram(self.shader_program)
 
-        # Set uniforms
+        # Define uniformes
         if self.player_pos_location != -1:
             glUniform3f(self.player_pos_location, player_x, player_y, player_z)
 
@@ -96,54 +96,54 @@ class LightingShader:
             glUniform3f(self.base_color_location, base_color[0], base_color[1], base_color[2])
 
     def disable(self):
-        """Disable the shader."""
+        """Desabilita o shader."""
         if self.shader_program is not None:
             shaders.glUseProgram(0)
 
 
 class SimpleLighting:
-    """Simpler OpenGL fixed-function lighting as fallback."""
+    """Iluminação de função fixa do OpenGL mais simples como alternativa."""
 
     def __init__(self, light_radius=10.0):
         """
-        Initialize simple lighting.
+        Inicializa iluminação simples.
 
         Args:
-            light_radius: Radius of the light effect
+            light_radius: Raio do efeito de luz
         """
         self.light_radius = light_radius
 
     def setup(self, player_x, player_y, player_z):
         """
-        Setup OpenGL lighting at player position.
+        Configura iluminação OpenGL na posição do jogador.
 
         Args:
-            player_x: Player X position
-            player_y: Player Y position
-            player_z: Player Z position
+            player_x: Posição X do jogador
+            player_y: Posição Y do jogador
+            player_z: Posição Z do jogador
         """
         glEnable(GL_LIGHTING)
         glEnable(GL_LIGHT0)
 
-        # Position light at player
+        # Posiciona luz no jogador
         glLightfv(GL_LIGHT0, GL_POSITION, [player_x, player_y, player_z, 1.0])
 
-        # White light
+        # Luz branca
         glLightfv(GL_LIGHT0, GL_DIFFUSE, [1.0, 1.0, 1.0, 1.0])
         glLightfv(GL_LIGHT0, GL_AMBIENT, [0.1, 0.1, 0.1, 1.0])
         glLightfv(GL_LIGHT0, GL_SPECULAR, [0.5, 0.5, 0.5, 1.0])
 
-        # Attenuation based on radius
+        # Atenuação baseada no raio
         glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION, 1.0)
         glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, 2.0 / self.light_radius)
         glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 1.0 / (self.light_radius * self.light_radius))
 
-        # Enable color material
+        # Habilita material colorido
         glEnable(GL_COLOR_MATERIAL)
         glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)
 
     def disable(self):
-        """Disable lighting."""
+        """Desabilita iluminação."""
         glDisable(GL_LIGHTING)
         glDisable(GL_LIGHT0)
         glDisable(GL_COLOR_MATERIAL)

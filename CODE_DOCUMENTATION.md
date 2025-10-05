@@ -1,79 +1,79 @@
-# Dreamrooms - Code Documentation
+# Dreamrooms - Documentação do Código
 
-## Table of Contents
-1. [Architecture Overview](#architecture-overview)
-2. [Directory Structure](#directory-structure)
-3. [Core Systems](#core-systems)
-4. [Module Reference](#module-reference)
-5. [Data Flow](#data-flow)
-6. [Key Algorithms](#key-algorithms)
-
----
-
-## Architecture Overview
-
-**Dreamrooms** is built using Python with PyOpenGL for 3D rendering and Pygame for window management, input handling, and audio. The architecture follows a modular design pattern with clear separation of concerns:
-
-- **Rendering**: OpenGL fixed-function pipeline for 3D graphics
-- **Game Loop**: Traditional game loop in `main.py`
-- **Entity-Component**: Modular systems for player, enemy, lighting, and environment
-- **Procedural Generation**: Maze generation using Prim's algorithm
-- **State Management**: Game states (menu, playing, victory, game over)
-
-### Technology Stack
-- **Python 3.x**: Core language
-- **PyOpenGL**: 3D rendering
-- **Pygame**: Window, input, audio
-- **NumPy**: Mathematical operations
+## Índice
+1. [Visão Geral da Arquitetura](#visão-geral-da-arquitetura)
+2. [Estrutura de Diretórios](#estrutura-de-diretórios)
+3. [Sistemas Principais](#sistemas-principais)
+4. [Referência de Módulos](#referência-de-módulos)
+5. [Fluxo de Dados](#fluxo-de-dados)
+6. [Algoritmos Principais](#algoritmos-principais)
 
 ---
 
-## Directory Structure
+## Visão Geral da Arquitetura
+
+**Dreamrooms** é construído usando Python com PyOpenGL para renderização 3D e Pygame para gerenciamento de janelas, entrada e áudio. A arquitetura segue um padrão de design modular com clara separação de responsabilidades:
+
+- **Renderização**: Pipeline de função fixa OpenGL para gráficos 3D
+- **Loop do Jogo**: Loop de jogo tradicional em `main.py`
+- **Entidade-Componente**: Sistemas modulares para jogador, inimigo, iluminação e ambiente
+- **Geração Procedural**: Geração de labirinto usando o algoritmo de Prim
+- **Gerenciamento de Estado**: Estados do jogo (menu, jogando, vitória, game over)
+
+### Stack de Tecnologia
+- **Python 3.x**: Linguagem principal
+- **PyOpenGL**: Renderização 3D
+- **Pygame**: Janela, entrada, áudio
+- **NumPy**: Operações matemáticas
+
+---
+
+## Estrutura de Diretórios
 
 ```
 caves-game/
-├── main.py                 # Main entry point and game loop
-├── config.py               # Global game configuration
-├── menu.py                 # Main menu UI
-├── config_screen.py        # Settings menu UI
-├── victory_screen.py       # Victory screen UI
+├── main.py                 # Ponto de entrada principal e loop do jogo
+├── config.py               # Configuração global do jogo
+├── menu.py                 # UI do menu principal
+├── config_screen.py        # UI do menu de configurações
+├── victory_screen.py       # UI da tela de vitória
 │
-├── player/                 # Player-related modules
-│   ├── player.py          # Player entity and movement
-│   ├── player_enemy.py    # Enemy AI entity
-│   ├── movement.py        # Movement physics
-│   └── lantern.py         # Unused lantern system
+├── player/                 # Módulos relacionados ao jogador
+│   ├── player.py          # Entidade do jogador e movimento
+│   ├── player_enemy.py    # Entidade da IA inimiga
+│   ├── movement.py        # Física de movimento
+│   └── lantern.py         # Sistema de lanterna não utilizado
 │
-├── place/                  # Environment/world modules
-│   ├── place.py           # Main world container
-│   ├── framework.py       # Rendering and collision framework
-│   ├── floor.py           # Floor rendering
-│   ├── wall.py            # Wall rendering
-│   ├── ceiling.py         # Ceiling rendering
-│   └── outside.py         # Outdoor environment (grass, sky, boundary)
+├── place/                  # Módulos de ambiente/mundo
+│   ├── place.py           # Container principal do mundo
+│   ├── framework.py       # Framework de renderização e colisão
+│   ├── floor.py           # Renderização do chão
+│   ├── wall.py            # Renderização das paredes
+│   ├── ceiling.py         # Renderização do teto
+│   └── outside.py         # Ambiente externo (grama, céu, limite)
 │
-├── light/                  # Lighting system modules
-│   ├── light.py           # Main light ball entity
-│   ├── lighting_config.py # Lighting configuration parameters
-│   ├── light_setup.py     # OpenGL lighting setup
-│   ├── light_math.py      # Light math calculations
-│   ├── light_renderer.py  # Light ball rendering
-│   └── advanced_lighting.py # Shader-based advanced lighting (unused)
+├── light/                  # Módulos do sistema de iluminação
+│   ├── light.py           # Entidade principal da bola de luz
+│   ├── lighting_config.py # Parâmetros de configuração de iluminação
+│   ├── light_setup.py     # Configuração de iluminação OpenGL
+│   ├── light_math.py      # Cálculos matemáticos de luz
+│   ├── light_renderer.py  # Renderização da bola de luz
+│   └── advanced_lighting.py # Iluminação avançada baseada em shaders (não utilizada)
 │
-├── maze/                   # Maze generation modules
-│   ├── maze.py            # Maze data structure and builder
-│   └── generator.py       # Prim's algorithm maze generator
+├── maze/                   # Módulos de geração de labirinto
+│   ├── maze.py            # Estrutura de dados e construtor do labirinto
+│   └── generator.py       # Gerador de labirinto com algoritmo de Prim
 │
-├── enemy/                  # Enemy modules
-│   └── enemy.py           # Enemy entity (sphere-based, unused)
+├── enemy/                  # Módulos de inimigo
+│   └── enemy.py           # Entidade inimiga (baseada em esfera, não utilizada)
 │
-├── collision/              # Collision detection
-│   └── framework.py       # Collision interface
+├── collision/              # Detecção de colisão
+│   └── framework.py       # Interface de colisão
 │
-├── spawn/                  # Spawn utilities
-│   └── spawn.py           # Position calculation helpers
+├── spawn/                  # Utilitários de spawn
+│   └── spawn.py           # Auxiliares de cálculo de posição
 │
-└── assets/                 # Game assets
+└── assets/                 # Recursos do jogo
     ├── audio/
     │   ├── soundtrack.mp3
     │   ├── autro.mp3
@@ -86,308 +86,308 @@ caves-game/
 
 ---
 
-## Core Systems
+## Sistemas Principais
 
-### 1. Game Loop (`main.py`)
+### 1. Loop do Jogo (`main.py`)
 
-The main game loop follows this structure:
+O loop principal do jogo segue esta estrutura:
 
 ```
-Initialization
-├── Pygame/OpenGL setup
-├── Menu system
-├── World generation
-└── Player/Enemy spawning
+Inicialização
+├── Configuração Pygame/OpenGL
+├── Sistema de menu
+├── Geração do mundo
+└── Spawn do jogador/inimigo
 
-Game Loop
-├── Event Handling (input)
-├── Update (physics, AI, collisions)
-├── Render (3D scene, UI overlay)
-└── Frame timing (60 FPS)
+Loop do Jogo
+├── Tratamento de Eventos (entrada)
+├── Atualização (física, IA, colisões)
+├── Renderização (cena 3D, sobreposição UI)
+└── Temporização de frames (60 FPS)
 
-Cleanup
-└── Pygame quit
+Limpeza
+└── Encerramento do Pygame
 ```
 
-**Key States:**
-- `running`: Game is active
-- `game_over`: Player was caught
-- `show_credits`: Victory or game over overlay
+**Estados Principais:**
+- `running`: Jogo está ativo
+- `game_over`: Jogador foi capturado
+- `show_credits`: Sobreposição de vitória ou game over
 
-### 2. Lighting System (`light/`)
+### 2. Sistema de Iluminação (`light/`)
 
-The lighting system uses OpenGL fixed-function pipeline with a spotlight model:
+O sistema de iluminação usa o pipeline de função fixa OpenGL com um modelo de holofote:
 
-**Components:**
-- `LightBall`: Main light entity
-- `LightingConfig`: All lighting parameters
-- `LightingSetup`: OpenGL state configuration
-- `LightRenderer`: Visual light ball rendering
+**Componentes:**
+- `LightBall`: Entidade de luz principal
+- `LightingConfig`: Todos os parâmetros de iluminação
+- `LightingSetup`: Configuração de estado OpenGL
+- `LightRenderer`: Renderização visual da bola de luz
 
-**Features:**
-- Warm torch-like color temperature
-- Distance attenuation (inverse-square law)
-- Spotlight with soft edges
-- Fog for atmospheric depth
-- Material properties for realistic surface interaction
+**Recursos:**
+- Temperatura de cor quente semelhante a tocha
+- Atenuação por distância (lei do inverso do quadrado)
+- Holofote com bordas suaves
+- Neblina para profundidade atmosférica
+- Propriedades de material para interação realista de superfície
 
-### 3. Maze Generation (`maze/`)
+### 3. Geração de Labirinto (`maze/`)
 
-**Algorithm**: Prim's Minimum Spanning Tree
-- Creates perfect mazes (one path between any two points)
-- Guaranteed solution from start to exit
-- Dead ends for enemy spawning
+**Algoritmo**: Árvore Geradora Mínima de Prim
+- Cria labirintos perfeitos (um caminho entre quaisquer dois pontos)
+- Solução garantida do início à saída
+- Becos sem saída para spawn de inimigos
 
-**Process:**
-1. Initialize grid with all walls
-2. Choose random start cell
-3. Use Prim's algorithm to carve passages
-4. Mark start (S) and exit (E) positions
-5. Find dead ends for enemy placement
+**Processo:**
+1. Inicializar grade com todas as paredes
+2. Escolher célula inicial aleatória
+3. Usar algoritmo de Prim para esculpir passagens
+4. Marcar posições de início (S) e saída (E)
+5. Encontrar becos sem saída para colocação de inimigos
 
-### 4. Player System (`player/`)
+### 4. Sistema do Jogador (`player/`)
 
-**Movement:**
-- WASD keyboard input
-- Mouse look (yaw/pitch)
-- Collision detection with walls
-- Smooth physics with delta time
+**Movimento:**
+- Entrada de teclado WASD
+- Visão com mouse (yaw/pitch)
+- Detecção de colisão com paredes
+- Física suave com delta time
 
-**Camera:**
-- First-person perspective
-- 45° FOV
-- View matrix updates based on rotation
+**Câmera:**
+- Perspectiva em primeira pessoa
+- FOV de 45°
+- Matriz de visão atualizada com base na rotação
 
-### 5. Enemy AI (`player/player_enemy.py`)
+### 5. IA do Inimigo (`player/player_enemy.py`)
 
-**Behavior:**
-- Detection range: 15 units (sphere)
-- Chase speed: 3.5 units/sec
-- Pathfinding: Direct pursuit with wall collision
-- Catch distance: < 1 unit triggers game over
+**Comportamento:**
+- Alcance de detecção: 15 unidades (esfera)
+- Velocidade de perseguição: 3.5 unidades/seg
+- Pathfinding: Perseguição direta com colisão de parede
+- Distância de captura: < 1 unidade dispara game over
 
-**States:**
-- Idle: Waiting to detect player
-- Chasing: Pursuing player relentlessly
+**Estados:**
+- Inativo: Aguardando para detectar jogador
+- Perseguindo: Perseguindo jogador implacavelmente
 
-### 6. Rendering Pipeline
+### 6. Pipeline de Renderização
 
-**3D Rendering:**
-1. Clear buffers (color, depth)
-2. Setup camera (view matrix)
-3. Configure lighting
-4. Render environment (floor, walls, ceiling, outside)
-5. Render enemy (billboard sprite)
-6. Disable lighting
+**Renderização 3D:**
+1. Limpar buffers (cor, profundidade)
+2. Configurar câmera (matriz de visão)
+3. Configurar iluminação
+4. Renderizar ambiente (chão, paredes, teto, externo)
+5. Renderizar inimigo (sprite billboard)
+6. Desabilitar iluminação
 
-**2D Overlay:**
-1. Switch to orthographic projection
-2. Render semi-transparent background
-3. Render text textures (victory/game over)
-4. Restore 3D projection
+**Sobreposição 2D:**
+1. Mudar para projeção ortográfica
+2. Renderizar fundo semi-transparente
+3. Renderizar texturas de texto (vitória/game over)
+4. Restaurar projeção 3D
 
 ---
 
-## Module Reference
+## Referência de Módulos
 
 ### `main.py`
-**Purpose**: Entry point, game loop, state management
+**Propósito**: Ponto de entrada, loop do jogo, gerenciamento de estado
 
-**Key Functions:**
-- `main()`: Main game loop
-- `show_menu()`: Display main menu
-- `show_config()`: Display configuration screen
-- `show_victory()`: Display victory screen
-- `setup_opengl()`: Initialize OpenGL settings
+**Funções Principais:**
+- `main()`: Loop principal do jogo
+- `show_menu()`: Exibir menu principal
+- `show_config()`: Exibir tela de configuração
+- `show_victory()`: Exibir tela de vitória
+- `setup_opengl()`: Inicializar configurações OpenGL
 
-**Game States:**
-- Menu → Config/Play
-- Play → Victory/Game Over → Exit
+**Estados do Jogo:**
+- Menu → Config/Jogar
+- Jogar → Vitória/Game Over → Sair
 
 ### `config.py`
-**Purpose**: Global game configuration
+**Propósito**: Configuração global do jogo
 
-**Settings:**
-- `music_enabled`: Toggle music on/off
-- `music_volume`: Volume level (0.0-1.0)
-- `maze_size`: Maze dimensions (1-10)
+**Configurações:**
+- `music_enabled`: Ativar/desativar música
+- `music_volume`: Nível de volume (0.0-1.0)
+- `maze_size`: Dimensões do labirinto (1-10)
 
 ### `player/player.py`
-**Purpose**: Player entity with movement and camera
+**Propósito**: Entidade do jogador com movimento e câmera
 
-**Key Methods:**
-- `update()`: Update position with physics and collision
-- `handle_key_down/up()`: Process keyboard input
-- `handle_mouse_motion()`: Process mouse look
-- `get_position()`: Return current position
-- `get_view_matrix_rotation()`: Return camera rotation
+**Métodos Principais:**
+- `update()`: Atualizar posição com física e colisão
+- `handle_key_down/up()`: Processar entrada de teclado
+- `handle_mouse_motion()`: Processar visão com mouse
+- `get_position()`: Retornar posição atual
+- `get_view_matrix_rotation()`: Retornar rotação da câmera
 
 ### `place/place.py`
-**Purpose**: World container, environment setup
+**Propósito**: Container do mundo, configuração do ambiente
 
-**Responsibilities:**
-- Initialize framework
-- Generate and build maze
-- Spawn enemy
-- Update enemy AI
-- Coordinate rendering
+**Responsabilidades:**
+- Inicializar framework
+- Gerar e construir labirinto
+- Spawn do inimigo
+- Atualizar IA do inimigo
+- Coordenar renderização
 
 ### `light/light.py`
-**Purpose**: Main light source entity
+**Propósito**: Entidade da fonte de luz principal
 
-**Key Methods:**
-- `calculate_position()`: Position light based on player view
-- `setup_lighting()`: Configure OpenGL lighting
-- `render_ball()`: Draw glowing sphere
-- `update_and_render()`: All-in-one update method
+**Métodos Principais:**
+- `calculate_position()`: Posicionar luz baseada na visão do jogador
+- `setup_lighting()`: Configurar iluminação OpenGL
+- `render_ball()`: Desenhar esfera brilhante
+- `update_and_render()`: Método de atualização tudo-em-um
 
 ### `light/lighting_config.py`
-**Purpose**: Centralized lighting parameters
+**Propósito**: Parâmetros de iluminação centralizados
 
-**Categories:**
-- Light ball properties (position, size, range)
-- Spotlight properties (angle, exponent)
-- Light colors (diffuse, ambient, specular)
-- Attenuation (constant, linear, quadratic)
-- Material properties (how surfaces react to light)
-- Fog properties (depth perception)
+**Categorias:**
+- Propriedades da bola de luz (posição, tamanho, alcance)
+- Propriedades do holofote (ângulo, expoente)
+- Cores da luz (difusa, ambiente, especular)
+- Atenuação (constante, linear, quadrática)
+- Propriedades de material (como superfícies reagem à luz)
+- Propriedades de neblina (percepção de profundidade)
 
 ### `maze/generator.py`
-**Purpose**: Maze generation using Prim's algorithm
+**Propósito**: Geração de labirinto usando algoritmo de Prim
 
-**Key Functions:**
-- `generate()`: Main generation entry point
-- `_prim_algorithm()`: Core maze carving
-- `_get_neighbors()`: Find adjacent cells
-- `find_dead_ends()`: Locate dead ends for enemy spawn
+**Funções Principais:**
+- `generate()`: Ponto de entrada principal da geração
+- `_prim_algorithm()`: Núcleo de esculpir labirinto
+- `_get_neighbors()`: Encontrar células adjacentes
+- `find_dead_ends()`: Localizar becos sem saída para spawn de inimigo
 
 ### `player/player_enemy.py`
-**Purpose**: Enemy AI with billboard rendering
+**Propósito**: IA do inimigo com renderização billboard
 
-**Key Methods:**
-- `can_see_player()`: Detection range check
-- `update()`: AI logic and movement, returns True if caught player
-- `render()`: Billboard sprite facing player
+**Métodos Principais:**
+- `can_see_player()`: Verificação de alcance de detecção
+- `update()`: Lógica de IA e movimento, retorna True se capturou jogador
+- `render()`: Sprite billboard voltado para o jogador
 
 ---
 
-## Data Flow
+## Fluxo de Dados
 
-### Startup Sequence
+### Sequência de Inicialização
 ```
 main()
 ├── pygame.init()
-├── show_menu() → User selects Play
-├── OpenGL setup
+├── show_menu() → Usuário seleciona Jogar
+├── Configuração OpenGL
 ├── Place.__init__()
-│   ├── Maze.generate() → Grid
-│   ├── Maze.build() → Walls/Floor/Ceiling
-│   └── Spawn enemy in dead end
-├── Player.__init__() → Spawn at start position
+│   ├── Maze.generate() → Grade
+│   ├── Maze.build() → Paredes/Chão/Teto
+│   └── Spawn inimigo em beco sem saída
+├── Player.__init__() → Spawn na posição inicial
 └── LightBall.__init__()
 ```
 
-### Game Loop Data Flow
+### Fluxo de Dados do Loop do Jogo
 ```
-Event Input
+Entrada de Evento
 ├── KEYDOWN/KEYUP → Player.handle_key_*()
 ├── MOUSEMOTION → Player.handle_mouse_motion()
-└── ESC → Exit
+└── ESC → Sair
 
-Update Phase
-├── Player.update() → Movement + Collision
+Fase de Atualização
+├── Player.update() → Movimento + Colisão
 ├── Place.update()
-│   └── Enemy.update() → AI + Collision → Returns caught status
-└── LightBall.update_and_render() → Lighting setup
+│   └── Enemy.update() → IA + Colisão → Retorna status de captura
+└── LightBall.update_and_render() → Configuração de iluminação
 
-Render Phase
-├── Camera transform (pitch, yaw, position)
-├── LightBall.setup_lighting() → OpenGL lights
-├── Place.render() → Environment
-├── Place.render_enemy() → Enemy billboard
-└── UI overlay (if game over or victory)
+Fase de Renderização
+├── Transformação da câmera (pitch, yaw, posição)
+├── LightBall.setup_lighting() → Luzes OpenGL
+├── Place.render() → Ambiente
+├── Place.render_enemy() → Billboard do inimigo
+└── Sobreposição UI (se game over ou vitória)
 ```
 
-### Victory/Game Over Flow
+### Fluxo de Vitória/Game Over
 ```
-Victory:
-├── Player reaches exit position
-├── Stop gameplay updates
-├── Load autro.mp3
-├── Generate victory text textures
-├── Show credits overlay
-└── Continue rendering (frozen state)
+Vitória:
+├── Jogador alcança posição de saída
+├── Parar atualizações do gameplay
+├── Carregar autro.mp3
+├── Gerar texturas de texto de vitória
+├── Mostrar sobreposição de créditos
+└── Continuar renderizando (estado congelado)
 
 Game Over:
-├── Enemy catches player (distance < 1.0)
-├── Set game_over = True
-├── Load death.mp3
-├── Generate "GAME OVER" texture
-├── Show overlay
-├── Freeze all updates
-└── Only ESC works
+├── Inimigo captura jogador (distância < 1.0)
+├── Definir game_over = True
+├── Carregar death.mp3
+├── Gerar textura "GAME OVER"
+├── Mostrar sobreposição
+├── Congelar todas as atualizações
+└── Apenas ESC funciona
 ```
 
 ---
 
-## Key Algorithms
+## Algoritmos Principais
 
-### Maze Generation (Prim's Algorithm)
+### Geração de Labirinto (Algoritmo de Prim)
 
 ```python
 def _prim_algorithm(grid, start_row, start_col):
-    # Initialize
+    # Inicializar
     walls = []
-    grid[start_row][start_col] = ' '  # Mark as passage
+    grid[start_row][start_col] = ' '  # Marcar como passagem
 
-    # Add walls of start cell
+    # Adicionar paredes da célula inicial
     walls.extend(get_neighbors(start_row, start_col))
 
     while walls:
-        # Pick random wall
+        # Escolher parede aleatória
         current = random.choice(walls)
 
-        # If connects passage to unvisited cell
+        # Se conecta passagem a célula não visitada
         if is_valid_carve(current):
-            # Carve passage
+            # Esculpir passagem
             grid[current.row][current.col] = ' '
 
-            # Add new walls
+            # Adicionar novas paredes
             walls.extend(get_neighbors(current))
 
-        # Remove processed wall
+        # Remover parede processada
         walls.remove(current)
 ```
 
-**Why Prim's?**
-- Generates "perfect" mazes (no loops, single solution)
-- Random wall selection creates organic-looking layouts
-- Guaranteed solvability
+**Por que Prim?**
+- Gera labirintos "perfeitos" (sem loops, solução única)
+- Seleção de parede aleatória cria layouts de aparência orgânica
+- Resolubilidade garantida
 
-### Collision Detection
+### Detecção de Colisão
 
 ```python
 def check_collision(point_x, point_z, radius):
     for wall in walls:
-        # Calculate closest point on wall to player
+        # Calcular ponto mais próximo na parede ao jogador
         closest_x = clamp(point_x, wall.min_x, wall.max_x)
         closest_z = clamp(point_z, wall.min_z, wall.max_z)
 
-        # Check distance
+        # Verificar distância
         distance_sq = (point_x - closest_x)² + (point_z - closest_z)²
 
         if distance_sq < radius²:
-            return True  # Collision!
+            return True  # Colisão!
 
-    return False  # No collision
+    return False  # Sem colisão
 ```
 
-**Features:**
-- Circle-to-AABB (Axis-Aligned Bounding Box) collision
-- Finds closest point on rectangle to circle center
-- Early exit on first collision found
+**Recursos:**
+- Colisão Círculo-para-AABB (Axis-Aligned Bounding Box)
+- Encontra ponto mais próximo no retângulo ao centro do círculo
+- Saída antecipada na primeira colisão encontrada
 
-### Light Attenuation
+### Atenuação de Luz
 
 ```python
 def calculate_attenuation(distance):
@@ -399,92 +399,92 @@ def calculate_attenuation(distance):
     return attenuation
 ```
 
-**Formula**: Inverse-square law approximation
-- **Constant**: Base brightness
-- **Linear**: Gradual falloff
-- **Quadratic**: Realistic distance-based dimming
+**Fórmula**: Aproximação da lei do inverso do quadrado
+- **Constante**: Brilho base
+- **Linear**: Queda gradual
+- **Quadrática**: Escurecimento realista baseado em distância
 
-### Spotlight Calculation
+### Cálculo de Holofote
 
 ```python
 def spotlight_effect(light_dir, spot_dir, cutoff_angle, exponent):
-    # Calculate angle between light direction and spotlight direction
+    # Calcular ângulo entre direção da luz e direção do holofote
     cos_angle = dot(light_dir, spot_dir)
 
-    # Check if within cone
+    # Verificar se está dentro do cone
     if acos(cos_angle) < cutoff_angle:
-        # Calculate intensity with smooth falloff
+        # Calcular intensidade com queda suave
         intensity = (1.0 - angle/cutoff_angle) ** exponent
         return intensity
     else:
-        return 0.0  # Outside cone, no light
+        return 0.0  # Fora do cone, sem luz
 ```
 
-**Features:**
-- Smooth cone edges (exponent controls smoothness)
-- Angular falloff for realistic spotlight behavior
+**Recursos:**
+- Bordas de cone suaves (expoente controla suavidade)
+- Queda angular para comportamento realista de holofote
 
 ---
 
-## Performance Considerations
+## Considerações de Performance
 
-### Optimization Strategies
+### Estratégias de Otimização
 
-1. **Collision Detection**
-   - Grid-based spatial partitioning (walls organized by cell)
-   - Early exit on first collision
-   - Smaller collision radius for enemies (0.3 vs 0.5)
+1. **Detecção de Colisão**
+   - Particionamento espacial baseado em grade (paredes organizadas por célula)
+   - Saída antecipada na primeira colisão
+   - Raio de colisão menor para inimigos (0.3 vs 0.5)
 
-2. **Rendering**
-   - Fixed-function pipeline (no shader compilation overhead)
-   - Minimal state changes
-   - Batched geometry (single quad per wall face)
-   - Texture clamping to avoid repeat overhead
+2. **Renderização**
+   - Pipeline de função fixa (sem overhead de compilação de shader)
+   - Mudanças de estado mínimas
+   - Geometria em lote (único quad por face de parede)
+   - Clamping de textura para evitar overhead de repetição
 
-3. **Maze Generation**
-   - One-time generation at startup
-   - Efficient grid representation (2D array)
-   - Dead end caching for enemy spawn
+3. **Geração de Labirinto**
+   - Geração única na inicialização
+   - Representação eficiente de grade (array 2D)
+   - Cache de becos sem saída para spawn de inimigo
 
-4. **Update Loop**
-   - Delta time for frame-rate independence
-   - Conditional updates (no updates when game over)
-   - Single enemy instance
+4. **Loop de Atualização**
+   - Delta time para independência de taxa de frames
+   - Atualizações condicionais (sem atualizações quando game over)
+   - Instância única de inimigo
 
-### Potential Bottlenecks
+### Gargalos Potenciais
 
-- **Large mazes**: O(n²) collision checks with many walls
-- **Fog rendering**: Per-pixel calculation in fixed-function
-- **Text texture generation**: String rendering to texture conversion
+- **Labirintos grandes**: Verificações de colisão O(n²) com muitas paredes
+- **Renderização de neblina**: Cálculo por pixel em função fixa
+- **Geração de textura de texto**: Conversão de renderização de string para textura
 
-### Scalability
+### Escalabilidade
 
-Current design supports:
-- Maze sizes up to 10x10 comfortably
-- Single enemy (could extend to multiple with spatial partitioning)
-- 60 FPS target on modest hardware
+O design atual suporta:
+- Tamanhos de labirinto até 10x10 confortavelmente
+- Inimigo único (poderia estender para múltiplos com particionamento espacial)
+- Alvo de 60 FPS em hardware modesto
 
 ---
 
-## Extension Points
+## Pontos de Extensão
 
-### Adding New Features
+### Adicionando Novos Recursos
 
-**Multiple Enemies:**
+**Múltiplos Inimigos:**
 ```python
-# In place/place.py
+# Em place/place.py
 self.enemies = [PlayerEnemy(...) for _ in range(num_enemies)]
 
 def update(self, delta_time, player_x, player_z):
     for enemy in self.enemies:
         if enemy.update(delta_time, player_x, player_z, collision_check):
-            return True  # Any enemy caught player
+            return True  # Qualquer inimigo capturou jogador
     return False
 ```
 
 **Power-ups:**
 ```python
-# Create new module: items/powerup.py
+# Criar novo módulo: items/powerup.py
 class Powerup:
     def __init__(self, x, z, effect_type):
         self.position = (x, z)
@@ -495,9 +495,9 @@ class Powerup:
             player.speed *= 1.5
 ```
 
-**Sound Effects:**
+**Efeitos Sonoros:**
 ```python
-# In player.py
+# Em player.py
 footstep_sound = pygame.mixer.Sound('assets/audio/footstep.wav')
 
 def update(self, delta_time):
@@ -509,93 +509,93 @@ def update(self, delta_time):
 
 ---
 
-## Debugging Tips
+## Dicas de Depuração
 
-### Common Issues
+### Problemas Comuns
 
-**Light not working:**
-- Check `glEnable(GL_LIGHTING)` is called
-- Verify normals are set correctly (glNormal3f)
-- Ensure material properties are configured
+**Luz não funcionando:**
+- Verificar se `glEnable(GL_LIGHTING)` está chamado
+- Verificar se normais estão configuradas corretamente (glNormal3f)
+- Garantir que propriedades de material estejam configuradas
 
-**Collisions not working:**
-- Print collision radius and positions
-- Visualize collision boxes with debug rendering
-- Check coordinate system (OpenGL Y-up vs grid row/col)
+**Colisões não funcionando:**
+- Imprimir raio de colisão e posições
+- Visualizar caixas de colisão com renderização de debug
+- Verificar sistema de coordenadas (OpenGL Y-up vs linha/coluna da grade)
 
-**Maze unsolvable:**
-- Verify Prim's algorithm completion
-- Check start/exit positions are in passages (' ')
-- Print maze grid to console
+**Labirinto insolúvel:**
+- Verificar conclusão do algoritmo de Prim
+- Verificar se posições de início/saída estão em passagens (' ')
+- Imprimir grade do labirinto no console
 
-**Performance issues:**
-- Profile with Python's `cProfile`
-- Check maze size configuration
-- Monitor frame time with `clock.tick()`
+**Problemas de performance:**
+- Perfilar com `cProfile` do Python
+- Verificar configuração de tamanho do labirinto
+- Monitorar tempo de frame com `clock.tick()`
 
-### Debug Rendering
+### Renderização de Debug
 
 ```python
-# Add to render() in place/framework.py
+# Adicionar a render() em place/framework.py
 def render_debug_collision_boxes(self):
     glDisable(GL_LIGHTING)
-    glColor3f(1, 0, 0)  # Red wireframe
+    glColor3f(1, 0, 0)  # Wireframe vermelho
     for wall in self.walls:
-        # Draw wireframe box for each wall
+        # Desenhar caixa wireframe para cada parede
         draw_wireframe_box(wall.x, wall.z, wall.width, wall.depth)
     glEnable(GL_LIGHTING)
 ```
 
 ---
 
-## Code Style and Conventions
+## Estilo e Convenções de Código
 
-### Naming Conventions
+### Convenções de Nomenclatura
 - **Classes**: PascalCase (`PlayerEnemy`, `LightBall`)
-- **Functions/Methods**: snake_case (`update_and_render`, `check_collision`)
-- **Constants**: UPPER_SNAKE_CASE (`SPOT_CUTOFF_ANGLE`, `TEXTURE_PATH`)
-- **Private Methods**: Leading underscore (`_load_texture`, `_prim_algorithm`)
+- **Funções/Métodos**: snake_case (`update_and_render`, `check_collision`)
+- **Constantes**: UPPER_SNAKE_CASE (`SPOT_CUTOFF_ANGLE`, `TEXTURE_PATH`)
+- **Métodos Privados**: Underscore inicial (`_load_texture`, `_prim_algorithm`)
 
-### Documentation
-- Docstrings for all classes and public methods
-- Type hints in function signatures where helpful
-- Comments for complex algorithms
+### Documentação
+- Docstrings para todas as classes e métodos públicos
+- Type hints em assinaturas de função quando útil
+- Comentários para algoritmos complexos
 
-### File Organization
-- One class per file (with exceptions for small helpers)
-- Related classes grouped in directories
-- Configuration separated from logic
+### Organização de Arquivos
+- Uma classe por arquivo (com exceções para pequenos auxiliares)
+- Classes relacionadas agrupadas em diretórios
+- Configuração separada da lógica
 
 ---
 
-## Dependencies and Versions
+## Dependências e Versões
 
-### Required Libraries
+### Bibliotecas Necessárias
 ```
-pygame>=2.0.0        # Window, input, audio
-PyOpenGL>=3.1.0      # 3D rendering
-PyOpenGL-accelerate  # Performance boost
-numpy>=1.20.0        # Math operations
+pygame>=2.0.0        # Janela, entrada, áudio
+PyOpenGL>=3.1.0      # Renderização 3D
+PyOpenGL-accelerate  # Aumento de performance
+numpy>=1.20.0        # Operações matemáticas
 ```
 
-### Python Version
-- Minimum: Python 3.7
-- Recommended: Python 3.9+
+### Versão do Python
+- Mínimo: Python 3.7
+- Recomendado: Python 3.9+
 
 ---
 
-## Future Improvements
+## Melhorias Futuras
 
-### Potential Enhancements
-1. **Shader-based lighting**: More realistic illumination (currently has basic implementation in `advanced_lighting.py`)
-2. **Procedural textures**: Generate textures at runtime
-3. **Multiple floors**: Vertical maze navigation
-4. **Save system**: Checkpoint progress
-5. **Difficulty modes**: Adjust enemy speed, detection range, maze size
-6. **Audio effects**: Footsteps, breathing, enemy sounds
-7. **Particle effects**: Dust, atmospheric effects
-8. **Minimap**: Optional navigation aid (unlockable?)
+### Aprimoramentos Potenciais
+1. **Iluminação baseada em shader**: Iluminação mais realista (atualmente tem implementação básica em `advanced_lighting.py`)
+2. **Texturas procedurais**: Gerar texturas em tempo de execução
+3. **Múltiplos andares**: Navegação vertical no labirinto
+4. **Sistema de salvamento**: Progresso de checkpoint
+5. **Modos de dificuldade**: Ajustar velocidade do inimigo, alcance de detecção, tamanho do labirinto
+6. **Efeitos de áudio**: Passos, respiração, sons do inimigo
+7. **Efeitos de partículas**: Poeira, efeitos atmosféricos
+8. **Minimapa**: Auxílio de navegação opcional (desbloqueável?)
 
 ---
 
-**Note**: This documentation reflects the current state of the codebase. As the game evolves, keep this document updated to reflect architectural changes and new systems.
+**Nota**: Esta documentação reflete o estado atual do código. À medida que o jogo evolui, mantenha este documento atualizado para refletir mudanças arquiteturais e novos sistemas.

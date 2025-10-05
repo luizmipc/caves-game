@@ -3,19 +3,19 @@ import os
 
 
 class Config:
-    """Game configuration management."""
+    """Gerenciamento de configuração do jogo."""
 
     CONFIG_FILE = "game_config.json"
 
     def __init__(self):
-        """Initialize config with defaults."""
-        self.maze_size = 5  # Default size (creates 11x11 grid)
-        self.music_enabled = True  # Music on/off
-        self.music_volume = 0.5  # Volume 0.0-1.0 (default 50%)
+        """Inicializa a configuração com valores padrão."""
+        self.maze_size = 5  # Tamanho padrão (cria grid 11x11)
+        self.music_enabled = True  # Música ligada/desligada
+        self.music_volume = 0.5  # Volume 0.0-1.0 (padrão 50%)
         self.load()
 
     def load(self):
-        """Load config from file."""
+        """Carrega configuração do arquivo."""
         if os.path.exists(self.CONFIG_FILE):
             try:
                 with open(self.CONFIG_FILE, 'r') as f:
@@ -27,7 +27,7 @@ class Config:
                 print(f"Could not load config: {e}")
 
     def save(self):
-        """Save config to file."""
+        """Salva configuração no arquivo."""
         try:
             with open(self.CONFIG_FILE, 'w') as f:
                 json.dump({
@@ -39,5 +39,5 @@ class Config:
             print(f"Could not save config: {e}")
 
 
-# Global config instance
+# Instância global de configuração
 game_config = Config()

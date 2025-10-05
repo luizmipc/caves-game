@@ -6,33 +6,33 @@ import numpy as np
 
 
 class Enemy:
-    """AI enemy that chases the player when spotted."""
+    """Inimigo IA que persegue o jogador quando avistado."""
 
     TEXTURE_PATH = "assets/textures/enemy.png"
 
     def __init__(self, x, y, z):
         """
-        Initialize enemy.
+        Inicializa inimigo.
 
         Args:
-            x: X position
-            y: Y position (height - center of sprite)
-            z: Z position
+            x: Posição X
+            y: Posição Y (altura - centro do sprite)
+            z: Posição Z
         """
         self.x = x
         self.y = y
         self.z = z
-        self.size = 2.0  # Enemy width (larger for visibility)
-        self.height = 2.0  # Enemy height
-        self.speed = 2.0  # Movement speed
-        self.detection_range = 15.0  # Range to detect player
-        self.chase_speed = 3.5  # Speed when chasing
+        self.size = 2.0  # Largura do inimigo (maior para visibilidade)
+        self.height = 2.0  # Altura do inimigo
+        self.speed = 2.0  # Velocidade de movimento
+        self.detection_range = 15.0  # Alcance para detectar jogador
+        self.chase_speed = 3.5  # Velocidade ao perseguir
         self.is_chasing = False
         self.texture_id = self._load_texture()
 
     @classmethod
     def _load_texture(cls):
-        """Load enemy texture if it exists."""
+        """Carrega textura do inimigo se existir."""
         if not os.path.exists(cls.TEXTURE_PATH):
             return None
 
@@ -40,7 +40,7 @@ class Enemy:
             texture_surface = pygame.image.load(cls.TEXTURE_PATH)
             texture_surface = texture_surface.convert_alpha()
 
-            # Flip texture vertically for OpenGL
+            # Inverte textura verticalmente para OpenGL
             texture_data = pygame.image.tostring(texture_surface, "RGBA", 1)
             width = texture_surface.get_width()
             height = texture_surface.get_height()
@@ -54,19 +54,19 @@ class Enemy:
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, texture_data)
             return texture_id
         except Exception as e:
-            print(f"Could not load enemy texture: {e}")
+            print(f"Não foi possível carregar textura do inimigo: {e}")
             return None
 
     def can_see_player(self, player_x, player_z):
         """
-        Check if enemy can see the player.
+        Verifica se inimigo pode ver o jogador.
 
         Args:
-            player_x: Player X position
-            player_z: Player Z position
+            player_x: Posição X do jogador
+            player_z: Posição Z do jogador
 
         Returns:
-            bool: True if player is in range
+            bool: True se jogador está no alcance
         """
         dx = player_x - self.x
         dz = player_z - self.z
@@ -75,42 +75,42 @@ class Enemy:
 
     def update(self, delta_time, player_x, player_z, collision_check=None):
         """
-        Update enemy AI and movement.
+        Atualiza IA e movimento do inimigo.
 
         Args:
-            delta_time: Time since last update
-            player_x: Player X position
-            player_z: Player Z position
-            collision_check: Collision checking function
+            delta_time: Tempo desde a última atualização
+            player_x: Posição X do jogador
+            player_z: Posição Z do jogador
+            collision_check: Função de verificação de colisão
 
         Returns:
-            bool: True if enemy caught the player, False otherwise
+            bool: True se inimigo capturou o jogador, False caso contrário
         """
-        # Check if we can see the player
+        # Verifica se podemos ver o jogador
         if self.can_see_player(player_x, player_z):
             self.is_chasing = True
 
-        # Chase the player if spotted
+        # Persegue o jogador se avistado
         if self.is_chasing:
             dx = player_x - self.x
             dz = player_z - self.z
             distance = np.sqrt(dx * dx + dz * dz)
 
-            # Check if enemy caught the player
-            if distance < 1.0:  # Caught within 1 unit
+            # Verifica se inimigo capturou o jogador
+            if distance < 1.0:  # Capturado dentro de 1 unidade
                 return True
 
-            if distance > 0.5:  # Don't move if too close
-                # Normalize direction
+            if distance > 0.5:  # Não move se muito próximo
+                # Normaliza direção
                 dx /= distance
                 dz /= distance
 
-                # Calculate new position
+                # Calcula nova posição
                 move_speed = self.chase_speed * delta_time
                 new_x = self.x + dx * move_speed
                 new_z = self.z + dz * move_speed
 
-                # Check collision with smaller radius for enemy (0.3 instead of default 0.5)
+                # Verifica colisão com raio menor para inimigo (0.3 ao invés de 0.5 padrão)
                 if collision_check is None or not collision_check(new_x, new_z, radius=0.3):
                     self.x = new_x
                     self.z = new_z
@@ -119,24 +119,24 @@ class Enemy:
 
     def render(self, player_x, player_z):
         """
-        Render the enemy as a floating sphere.
+        Renderiza o inimigo como uma esfera flutuante.
 
         Args:
-            player_x: Player X position (unused for sphere)
-            player_z: Player Z position (unused for sphere)
+            player_x: Posição X do jogador (não usado para esfera)
+            player_z: Posição Z do jogador (não usado para esfera)
         """
         glPushMatrix()
 
-        # Move to enemy position
+        # Move para posição do inimigo
         glTranslatef(self.x, self.y, self.z)
 
-        # Draw as a bright red sphere (easy to see)
-        glColor3f(1.0, 0.0, 0.0)  # Bright red
+        # Desenha como uma esfera vermelha brilhante (fácil de ver)
+        glColor3f(1.0, 0.0, 0.0)  # Vermelho brilhante
 
-        # Create sphere using GLU quadric
+        # Cria esfera usando quadric GLU
         quadric = gluNewQuadric()
         gluQuadricDrawStyle(quadric, GLU_FILL)
-        gluSphere(quadric, 0.5, 16, 16)  # radius=0.5, segments=16
+        gluSphere(quadric, 0.5, 16, 16)  # raio=0.5, segmentos=16
         gluDeleteQuadric(quadric)
 
         glPopMatrix()

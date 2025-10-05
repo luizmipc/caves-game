@@ -2,37 +2,37 @@ from abc import ABC, abstractmethod
 
 
 class Collidable(ABC):
-    """Abstract base class for objects that can be checked for collision."""
+    """Classe base abstrata para objetos que podem ser verificados quanto a colisão."""
 
     @abstractmethod
     def check_collision(self, x, z, radius=0.5):
         """
-        Check if a point (with radius) collides with this object.
+        Verifica se um ponto (com raio) colide com este objeto.
 
         Args:
-            x: X coordinate of the point
-            z: Z coordinate of the point
-            radius: Collision radius around the point
+            x: Coordenada X do ponto
+            z: Coordenada Z do ponto
+            radius: Raio de colisão ao redor do ponto
 
         Returns:
-            bool: True if collision detected, False otherwise
+            bool: True se colisão detectada, False caso contrário
         """
         pass
 
 
 class CollisionFramework:
-    """Framework for managing collision detection in the game."""
+    """Framework para gerenciar detecção de colisão no jogo."""
 
     def __init__(self):
-        """Initialize the collision framework."""
+        """Inicializa o framework de colisão."""
         self.collidables = []
 
     def add_collidable(self, collidable):
         """
-        Add a collidable object to the collision system.
+        Adiciona um objeto colidível ao sistema de colisão.
 
         Args:
-            collidable: A Collidable instance to add
+            collidable: Uma instância de Collidable para adicionar
         """
         if not isinstance(collidable, Collidable):
             raise TypeError("Object must inherit from Collidable")
@@ -40,25 +40,25 @@ class CollisionFramework:
 
     def remove_collidable(self, collidable):
         """
-        Remove a collidable object from the collision system.
+        Remove um objeto colidível do sistema de colisão.
 
         Args:
-            collidable: The collidable to remove
+            collidable: O colidível a remover
         """
         if collidable in self.collidables:
             self.collidables.remove(collidable)
 
     def check_collision(self, x, z, radius=0.5):
         """
-        Check if a position collides with any registered collidable object.
+        Verifica se uma posição colide com qualquer objeto colidível registrado.
 
         Args:
-            x: X coordinate
-            z: Z coordinate
-            radius: Collision radius
+            x: Coordenada X
+            z: Coordenada Z
+            radius: Raio de colisão
 
         Returns:
-            bool: True if collision detected, False otherwise
+            bool: True se colisão detectada, False caso contrário
         """
         for collidable in self.collidables:
             if collidable.check_collision(x, z, radius):
@@ -67,15 +67,15 @@ class CollisionFramework:
 
     def get_colliding_objects(self, x, z, radius=0.5):
         """
-        Get all objects that collide with the given position.
+        Obtém todos os objetos que colidem com a posição fornecida.
 
         Args:
-            x: X coordinate
-            z: Z coordinate
-            radius: Collision radius
+            x: Coordenada X
+            z: Coordenada Z
+            radius: Raio de colisão
 
         Returns:
-            list: List of colliding Collidable objects
+            list: Lista de objetos Collidable em colisão
         """
         colliding = []
         for collidable in self.collidables:

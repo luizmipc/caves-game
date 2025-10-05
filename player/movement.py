@@ -5,21 +5,21 @@ import pygame
 class Movement:
     def __init__(self, speed=5.0):
         """
-        Initialize movement controller.
+        Inicializa o controlador de movimento.
 
         Args:
-            speed: Movement speed in units per second
+            speed: Velocidade de movimento em unidades por segundo
         """
         self.speed = speed
 
-        # Movement state
+        # Estado de movimento
         self.moving_forward = False
         self.moving_backward = False
         self.moving_left = False
         self.moving_right = False
 
     def handle_key_down(self, key):
-        """Handle key press events."""
+        """Lida com eventos de pressionamento de tecla."""
         if key == pygame.K_w:
             self.moving_forward = True
         elif key == pygame.K_s:
@@ -30,7 +30,7 @@ class Movement:
             self.moving_right = True
 
     def handle_key_up(self, key):
-        """Handle key release events."""
+        """Lida com eventos de liberação de tecla."""
         if key == pygame.K_w:
             self.moving_forward = False
         elif key == pygame.K_s:
@@ -42,22 +42,22 @@ class Movement:
 
     def update(self, position, yaw, delta_time, collision_check=None):
         """
-        Calculate new position based on movement state and camera yaw.
+        Calcula nova posição com base no estado de movimento e yaw da câmera.
 
         Args:
-            position: Current position tuple (x, y, z)
-            yaw: Camera yaw angle in degrees
-            delta_time: Time elapsed since last frame in seconds
-            collision_check: Optional function(x, z) -> bool to check collisions
+            position: Tupla de posição atual (x, y, z)
+            yaw: Ângulo yaw da câmera em graus
+            delta_time: Tempo decorrido desde o último frame em segundos
+            collision_check: Função opcional(x, z) -> bool para verificar colisões
 
         Returns:
-            tuple: New position (x, y, z)
+            tuple: Nova posição (x, y, z)
         """
         x, y, z = position
         yaw_rad = np.radians(yaw)
         new_x, new_z = x, z
 
-        # Forward/backward movement
+        # Movimento para frente/trás
         if self.moving_forward:
             new_x += np.sin(yaw_rad) * self.speed * delta_time
             new_z -= np.cos(yaw_rad) * self.speed * delta_time
@@ -65,7 +65,7 @@ class Movement:
             new_x -= np.sin(yaw_rad) * self.speed * delta_time
             new_z += np.cos(yaw_rad) * self.speed * delta_time
 
-        # Strafe left/right movement
+        # Movimento lateral esquerda/direita
         if self.moving_left:
             new_x -= np.cos(yaw_rad) * self.speed * delta_time
             new_z -= np.sin(yaw_rad) * self.speed * delta_time
@@ -73,7 +73,7 @@ class Movement:
             new_x += np.cos(yaw_rad) * self.speed * delta_time
             new_z += np.sin(yaw_rad) * self.speed * delta_time
 
-        # Check collision before applying movement
+        # Verifica colisão antes de aplicar movimento
         if collision_check is None or not collision_check(new_x, new_z):
             x, z = new_x, new_z
 

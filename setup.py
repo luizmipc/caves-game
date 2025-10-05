@@ -1,20 +1,20 @@
 """
-cx_Freeze setup script for Dreamrooms.
+Script de configuração cx_Freeze para Dreamrooms.
 
-This script builds standalone executables for the game.
+Este script constrói executáveis standalone para o jogo.
 
-Usage:
+Uso:
     python setup.py build
 
-The executable will be created in the build/ directory.
+O executável será criado no diretório build/.
 """
 
 from cx_Freeze import setup, Executable
 import sys
 
-# Dependencies to include
+# Dependências a incluir
 build_exe_options = {
-    # Packages to explicitly include
+    # Pacotes a incluir explicitamente
     "packages": [
         "pygame",
         "OpenGL",
@@ -25,14 +25,14 @@ build_exe_options = {
         "random"
     ],
 
-    # Files and folders to include with the executable
+    # Arquivos e pastas a incluir com o executável
     "include_files": [
-        "assets/",  # Include all game assets (audio, textures)
+        "assets/",  # Inclui todos os recursos do jogo (áudio, texturas)
     ],
 
-    # Modules to exclude (reduce file size)
+    # Módulos a excluir (reduz tamanho do arquivo)
     "excludes": [
-        "tkinter",  # Not used in the game
+        "tkinter",  # Não usado no jogo
         "unittest",
         "email",
         "http",
@@ -40,30 +40,30 @@ build_exe_options = {
         "pydoc",
     ],
 
-    # Additional optimization
+    # Otimização adicional
     "optimize": 2,
 }
 
-# Determine base for Windows (use "Win32GUI" to hide console window)
+# Determina base para Windows (usa "Win32GUI" para esconder janela do console)
 base = None
 if sys.platform == "win32":
-    base = "Win32GUI"  # Hides console window on Windows
+    base = "Win32GUI"  # Esconde janela do console no Windows
 
-# Executable configuration
+# Configuração do executável
 executables = [
     Executable(
         "main.py",
         base=base,
-        target_name="Dreamrooms",  # Name of the executable
-        icon=None,  # Add "icon.ico" here if you create one
+        target_name="Dreamrooms",  # Nome do executável
+        icon=None,  # Adicione "icon.ico" aqui se você criar um
     )
 ]
 
-# Setup configuration
+# Configuração do setup
 setup(
     name="Dreamrooms",
     version="1.0",
-    description="A liminal horror maze game inspired by backrooms, dreamcore, and David Lynch",
+    description="Um jogo de labirinto de horror liminal inspirado por backrooms, dreamcore e David Lynch",
     author="Leonardo Zordan Lima, Luiz Marcelo Itapicuru Pereira Costa, Matheus Soares Martins, Thiago Crivaro Nunes",
     options={"build_exe": build_exe_options},
     executables=executables,

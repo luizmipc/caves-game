@@ -5,44 +5,44 @@ from .movement import Movement
 class Player:
     def __init__(self, x=0.0, y=1.7, z=0.0):
         """
-        Initialize player with position, camera, and movement.
+        Inicializa jogador com posição, câmera e movimento.
 
         Args:
-            x, y, z: Initial position (y is height, default at eye level ~1.7m)
+            x, y, z: Posição inicial (y é altura, padrão ao nível dos olhos ~1.7m)
         """
         self.x = x
         self.y = y
         self.z = z
 
-        # Initialize camera and movement modules
+        # Inicializa módulos de câmera e movimento
         self.camera = Camera(sensitivity=0.1)
         self.movement = Movement(speed=5.0)
 
     def handle_mouse_motion(self, dx, dy):
         """
-        Handle mouse movement for camera rotation.
+        Trata movimento do mouse para rotação da câmera.
 
         Args:
-            dx: Mouse movement in x direction
-            dy: Mouse movement in y direction
+            dx: Movimento do mouse na direção x
+            dy: Movimento do mouse na direção y
         """
         self.camera.handle_mouse_motion(dx, dy)
 
     def handle_key_down(self, key):
-        """Handle key press events."""
+        """Trata eventos de pressionar tecla."""
         self.movement.handle_key_down(key)
 
     def handle_key_up(self, key):
-        """Handle key release events."""
+        """Trata eventos de soltar tecla."""
         self.movement.handle_key_up(key)
 
     def update(self, delta_time, collision_check=None):
         """
-        Update player position based on movement state.
+        Atualiza posição do jogador baseado no estado de movimento.
 
         Args:
-            delta_time: Time elapsed since last frame in seconds
-            collision_check: Optional function(x, z) -> bool to check collisions
+            delta_time: Tempo decorrido desde o último quadro em segundos
+            collision_check: Função opcional(x, z) -> bool para verificar colisões
         """
         position = (self.x, self.y, self.z)
         yaw = self.camera.get_yaw()
@@ -50,18 +50,18 @@ class Player:
 
     def get_view_matrix_rotation(self):
         """
-        Get the rotation angles for applying to OpenGL view matrix.
+        Obtém os ângulos de rotação para aplicar à matriz de visualização OpenGL.
 
         Returns:
-            tuple: (pitch, yaw) in degrees
+            tuple: (pitch, yaw) em graus
         """
         return self.camera.get_rotation()
 
     def get_position(self):
         """
-        Get the player's current position.
+        Obtém a posição atual do jogador.
 
         Returns:
-            tuple: (x, y, z) position
+            tuple: posição (x, y, z)
         """
         return (self.x, self.y, self.z)

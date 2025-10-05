@@ -1,6 +1,6 @@
 """
-Light renderer module.
-Handles rendering of the glowing light ball.
+Módulo de renderização de luz.
+Lida com a renderização da bola de luz brilhante.
 """
 
 from OpenGL.GL import *
@@ -9,39 +9,39 @@ import numpy as np
 
 
 class LightRenderer:
-    """Renders the glowing light ball visual."""
+    """Renderiza o visual da bola de luz brilhante."""
 
     @staticmethod
     def render_glowing_ball(position, radius, core_color, outer_color, outer_size_multiplier):
         """
-        Render a glowing ball at the specified position.
+        Renderiza uma bola brilhante na posição especificada.
 
         Args:
-            position: Light position [x, y, z]
-            radius: Ball radius
-            core_color: Core glow color [r, g, b, a]
-            outer_color: Outer glow color [r, g, b, a]
-            outer_size_multiplier: Size multiplier for outer glow
+            position: Posição da luz [x, y, z]
+            radius: Raio da bola
+            core_color: Cor do brilho do núcleo [r, g, b, a]
+            outer_color: Cor do brilho externo [r, g, b, a]
+            outer_size_multiplier: Multiplicador de tamanho para brilho externo
         """
         glPushMatrix()
 
-        # Move to light position
+        # Move para a posição da luz
         glTranslatef(position[0], position[1], position[2])
 
-        # Disable lighting for the ball itself (so it glows)
+        # Desabilita iluminação para a própria bola (para que ela brilhe)
         glDisable(GL_LIGHTING)
 
-        # Enable blending for glow effect
+        # Habilita blending para efeito de brilho
         glEnable(GL_BLEND)
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 
-        # Draw the glowing core (bright yellow-white)
+        # Desenha o núcleo brilhante (amarelo-branco brilhante)
         glColor4fv(core_color)
         quadric = gluNewQuadric()
         gluSphere(quadric, radius, 16, 16)
         gluDeleteQuadric(quadric)
 
-        # Draw outer glow (semi-transparent)
+        # Desenha o brilho externo (semi-transparente)
         glColor4fv(outer_color)
         quadric = gluNewQuadric()
         gluSphere(quadric, radius * outer_size_multiplier, 16, 16)
@@ -49,7 +49,7 @@ class LightRenderer:
 
         glDisable(GL_BLEND)
 
-        # Re-enable lighting for other objects
+        # Re-habilita iluminação para outros objetos
         glEnable(GL_LIGHTING)
 
         glPopMatrix()

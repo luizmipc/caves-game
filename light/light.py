@@ -1,6 +1,6 @@
 """
-Light module for the game.
-Creates a glowing ball light source that floats in front of the player.
+Módulo de luz para o jogo.
+Cria uma fonte de luz de bola brilhante que flutua na frente do jogador.
 """
 
 import numpy as np
@@ -11,21 +11,21 @@ from .light_renderer import LightRenderer
 
 
 class LightBall:
-    """A glowing ball of light that serves as the player's light source."""
+    """Uma bola de luz brilhante que serve como fonte de luz do jogador."""
 
     def __init__(self, distance=None, height_offset=None, radius=None, light_range=None):
         """
-        Initialize the light ball.
+        Inicializa a bola de luz.
 
         Args:
-            distance: Distance in front of the player (optional, uses config default)
-            height_offset: Height offset relative to player eye level (optional)
-            radius: Visual radius of the glowing ball (optional)
-            light_range: Maximum range of light illumination (optional)
+            distance: Distância na frente do jogador (opcional, usa padrão da config)
+            height_offset: Deslocamento de altura relativo ao nível dos olhos do jogador (opcional)
+            radius: Raio visual da bola brilhante (opcional)
+            light_range: Alcance máximo da iluminação (opcional)
         """
         self.config = LightingConfig()
 
-        # Override config with provided values
+        # Sobrescreve config com valores fornecidos
         self.distance = distance if distance is not None else self.config.DISTANCE_FROM_PLAYER
         self.height_offset = height_offset if height_offset is not None else self.config.HEIGHT_OFFSET
         self.radius = radius if radius is not None else self.config.BALL_RADIUS
@@ -35,23 +35,23 @@ class LightBall:
 
     def calculate_position(self, player_x, player_y, player_z, yaw, pitch, collision_check=None):
         """
-        Calculate the light ball position based on player view direction.
+        Calcula a posição da bola de luz baseada na direção de visão do jogador.
 
         Args:
-            player_x: Player X position
-            player_y: Player Y position
-            player_z: Player Z position
-            yaw: Player yaw angle
-            pitch: Player pitch angle
-            collision_check: Optional collision checking function
+            player_x: Posição X do jogador
+            player_y: Posição Y do jogador
+            player_z: Posição Z do jogador
+            yaw: Ângulo yaw do jogador
+            pitch: Ângulo pitch do jogador
+            collision_check: Função opcional de verificação de colisão
         """
-        # Player position vector
+        # Vetor de posição do jogador
         player_pos = np.array([player_x, player_y, player_z], dtype=np.float32)
 
-        # Calculate direction vector
+        # Calcula vetor de direção
         direction = calculate_direction_vector(yaw, pitch)
 
-        # Adjust distance if collision detected
+        # Ajusta distância se colisão detectada
         adjusted_distance = self.distance
         if collision_check:
             adjusted_distance = check_collision_and_adjust(
@@ -61,26 +61,26 @@ class LightBall:
                 self.config.COLLISION_CHECK_RADIUS
             )
 
-        # Calculate light position
+        # Calcula posição da luz
         self.position = calculate_light_position(
             player_pos, direction, adjusted_distance, self.height_offset
         )
 
     def setup_lighting(self, player_x, player_y, player_z, yaw, pitch):
         """
-        Setup OpenGL lighting from the light ball position.
+        Configura iluminação OpenGL a partir da posição da bola de luz.
 
         Args:
-            player_x: Player X position
-            player_y: Player Y position
-            player_z: Player Z position
-            yaw: Player yaw angle
-            pitch: Player pitch angle
+            player_x: Posição X do jogador
+            player_y: Posição Y do jogador
+            player_z: Posição Z do jogador
+            yaw: Ângulo yaw do jogador
+            pitch: Ângulo pitch do jogador
         """
-        # Setup global lighting parameters
+        # Configura parâmetros globais de iluminação
         LightingSetup.setup_global_lighting(self.config.GLOBAL_AMBIENT)
 
-        # Setup fog for depth perception
+        # Configura neblina para percepção de profundidade
         if self.config.FOG_ENABLED:
             LightingSetup.setup_fog(
                 self.config.FOG_COLOR,
@@ -89,15 +89,15 @@ class LightBall:
                 self.config.FOG_DENSITY
             )
 
-        # Calculate spotlight direction (with pitch offset)
+        # Calcula direção do spotlight (com deslocamento de pitch)
         adjusted_pitch = pitch + self.config.PITCH_ANGLE_OFFSET
         direction = calculate_direction_vector(yaw, adjusted_pitch)
 
-        # Calculate attenuation values
+        # Calcula valores de atenuação
         linear_atten = self.config.LINEAR_ATTENUATION_FACTOR / self.light_range
         quadratic_atten = self.config.QUADRATIC_ATTENUATION_FACTOR / (self.light_range * self.light_range)
 
-        # Setup spotlight
+        # Configura spotlight
         LightingSetup.setup_spotlight(
             self.position, direction,
             self.config.SPOT_CUTOFF_ANGLE,
@@ -110,7 +110,7 @@ class LightBall:
             quadratic_atten
         )
 
-        # Setup material properties
+        # Configura propriedades do material
         LightingSetup.setup_material_properties(
             self.config.MATERIAL_AMBIENT,
             self.config.MATERIAL_DIFFUSE,
@@ -119,7 +119,7 @@ class LightBall:
         )
 
     def render_ball(self):
-        """Render the glowing light ball itself."""
+        """Renderiza a própria bola de luz brilhante."""
         LightRenderer.render_glowing_ball(
             self.position,
             self.radius,
@@ -129,26 +129,26 @@ class LightBall:
         )
 
     def disable_lighting(self):
-        """Disable the lighting system."""
+        """Desabilita o sistema de iluminação."""
         LightingSetup.disable_lighting()
 
     def update_and_render(self, player_x, player_y, player_z, yaw, pitch, collision_check=None):
         """
-        Update light position and setup lighting in one call.
+        Atualiza posição da luz e configura iluminação em uma única chamada.
 
         Args:
-            player_x: Player X position
-            player_y: Player Y position
-            player_z: Player Z position
-            yaw: Player yaw angle
-            pitch: Player pitch angle
-            collision_check: Optional collision checking function
+            player_x: Posição X do jogador
+            player_y: Posição Y do jogador
+            player_z: Posição Z do jogador
+            yaw: Ângulo yaw do jogador
+            pitch: Ângulo pitch do jogador
+            collision_check: Função opcional de verificação de colisão
         """
-        # Calculate where the light ball should be
+        # Calcula onde a bola de luz deve estar
         self.calculate_position(player_x, player_y, player_z, yaw, pitch, collision_check)
 
-        # Setup the lighting from this position
+        # Configura a iluminação a partir desta posição
         self.setup_lighting(player_x, player_y, player_z, yaw, pitch)
 
-        # Render the visible glowing ball
+        # Renderiza a bola brilhante visível
         self.render_ball()
