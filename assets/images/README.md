@@ -1,6 +1,6 @@
 # Assets
 
-Place your image assets here:
+Coloque seus recursos de imagem aqui:
 
-- `menu_background.png` - Menu background image (recommended: 800x600)
-- Other textures and images as needed
+- `menu_background.png` - Imagem de fundo do menu (recomendado: 800x600)
+- Outras texturas e imagens conforme necessário

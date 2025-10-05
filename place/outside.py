@@ -5,28 +5,28 @@ import os
 
 
 class Outside(PlaceElement):
-    """Outside environment with grass floor, sky, and walls."""
+    """Ambiente externo com chão de grama, céu e paredes."""
 
     GRASS_TEXTURE_PATH = "assets/textures/grass.png"
     SKY_TEXTURE_PATH = "assets/textures/sky.png"
 
     def __init__(self, maze_size=100.0):
         """
-        Initialize the outside environment.
+        Inicializa o ambiente externo.
 
         Args:
-            maze_size: Size of the maze to surround
+            maze_size: Tamanho do labirinto a ser cercado
         """
         self.maze_size = maze_size
-        self.ground_size = maze_size * 5  # Much larger than maze
-        self.sky_height = 100.0  # Sky ceiling height
-        self.wall_height = self.sky_height  # Walls go all the way to sky
+        self.ground_size = maze_size * 5  # Muito maior que o labirinto
+        self.sky_height = 100.0  # Altura do teto do céu
+        self.wall_height = self.sky_height  # Paredes vão até o céu
 
         self.grass_texture = self._load_texture(self.GRASS_TEXTURE_PATH)
         self.sky_texture = self._load_texture(self.SKY_TEXTURE_PATH)
 
     def _load_texture(self, path):
-        """Load texture from file."""
+        """Carrega textura do arquivo."""
         if not os.path.exists(path):
             return None
 
@@ -34,7 +34,7 @@ class Outside(PlaceElement):
             texture_surface = pygame.image.load(path)
             texture_surface = texture_surface.convert_alpha()
 
-            # Flip texture vertically for OpenGL
+            # Inverte a textura verticalmente para o OpenGL
             texture_data = pygame.image.tostring(texture_surface, "RGBA", 1)
             width = texture_surface.get_width()
             height = texture_surface.get_height()
@@ -52,13 +52,13 @@ class Outside(PlaceElement):
             return None
 
     def render(self):
-        """Render the outside environment."""
+        """Renderiza o ambiente externo."""
         self._render_ground()
         self._render_sky()
         self._render_walls()
 
     def _render_ground(self):
-        """Render the grass ground plane."""
+        """Renderiza o plano de chão de grama."""
         glPushMatrix()
 
         half_size = self.ground_size / 2
@@ -68,12 +68,12 @@ class Outside(PlaceElement):
             glBindTexture(GL_TEXTURE_2D, self.grass_texture)
             glColor3f(1.0, 1.0, 1.0)
         else:
-            glColor3f(0.2, 0.6, 0.2)  # Green grass color
+            glColor3f(0.2, 0.6, 0.2)  # Cor de grama verde
 
-        # Draw ground with lots of texture repeats
+        # Desenha o chão com muitas repetições de textura
         tile_repeat = 50
         glBegin(GL_QUADS)
-        glNormal3f(0.0, 1.0, 0.0)  # Normal pointing up
+        glNormal3f(0.0, 1.0, 0.0)  # Normal apontando para cima
         if self.grass_texture:
             glTexCoord2f(0, 0)
         glVertex3f(-half_size, -0.01, -half_size)
@@ -94,7 +94,7 @@ class Outside(PlaceElement):
         glPopMatrix()
 
     def _render_sky(self):
-        """Render the sky dome/box."""
+        """Renderiza a cúpula/caixa do céu."""
         glPushMatrix()
 
         half_size = self.ground_size / 2
@@ -104,9 +104,9 @@ class Outside(PlaceElement):
             glBindTexture(GL_TEXTURE_2D, self.sky_texture)
             glColor3f(1.0, 1.0, 1.0)
         else:
-            glColor3f(0.5, 0.7, 1.0)  # Sky blue
+            glColor3f(0.5, 0.7, 1.0)  # Azul do céu
 
-        # Top (ceiling)
+        # Topo (teto)
         glBegin(GL_QUADS)
         if self.sky_texture:
             glTexCoord2f(0, 0)
@@ -128,22 +128,22 @@ class Outside(PlaceElement):
         glPopMatrix()
 
     def _render_walls(self):
-        """Render distant walls around the perimeter."""
+        """Renderiza paredes distantes ao redor do perímetro."""
         glPushMatrix()
 
         half_size = self.ground_size / 2
 
-        # Use sky texture for walls or light gray
+        # Usa textura do céu para paredes ou cinza claro
         if self.sky_texture:
             glEnable(GL_TEXTURE_2D)
             glBindTexture(GL_TEXTURE_2D, self.sky_texture)
             glColor3f(0.9, 0.9, 0.9)
         else:
-            glColor3f(0.7, 0.7, 0.8)  # Light gray
+            glColor3f(0.7, 0.7, 0.8)  # Cinza claro
 
         glBegin(GL_QUADS)
 
-        # North wall
+        # Parede norte
         if self.sky_texture:
             glTexCoord2f(0, 0)
         glVertex3f(-half_size, 0, -half_size)
@@ -157,7 +157,7 @@ class Outside(PlaceElement):
             glTexCoord2f(0, 1)
         glVertex3f(-half_size, self.wall_height, -half_size)
 
-        # South wall
+        # Parede sul
         if self.sky_texture:
             glTexCoord2f(0, 0)
         glVertex3f(-half_size, 0, half_size)
@@ -171,7 +171,7 @@ class Outside(PlaceElement):
             glTexCoord2f(4, 0)
         glVertex3f(half_size, 0, half_size)
 
-        # West wall
+        # Parede oeste
         if self.sky_texture:
             glTexCoord2f(0, 0)
         glVertex3f(-half_size, 0, -half_size)
@@ -185,7 +185,7 @@ class Outside(PlaceElement):
             glTexCoord2f(4, 0)
         glVertex3f(-half_size, 0, half_size)
 
-        # East wall
+        # Parede leste
         if self.sky_texture:
             glTexCoord2f(0, 0)
         glVertex3f(half_size, 0, -half_size)

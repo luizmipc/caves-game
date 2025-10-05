@@ -2,18 +2,18 @@ import random
 
 
 class MazeGenerator:
-    """Generate mazes using various algorithms."""
+    """Gera labirintos usando vários algoritmos."""
 
     @staticmethod
     def find_dead_ends(grid):
         """
-        Find all dead ends in the maze (cells with only one exit).
+        Encontra todos os becos sem saída no labirinto (células com apenas uma saída).
 
         Args:
-            grid: 2D maze grid
+            grid: Grade 2D do labirinto
 
         Returns:
-            list: List of (row, col) tuples representing dead end positions
+            list: Lista de tuplas (linha, coluna) representando posições de becos sem saída
         """
         dead_ends = []
         rows = len(grid)
@@ -22,7 +22,7 @@ class MazeGenerator:
         for row in range(1, rows - 1):
             for col in range(1, cols - 1):
                 if grid[row][col] in ['.', 'S', 'E']:
-                    # Count open neighbors
+                    # Conta vizinhos abertos
                     open_neighbors = 0
                     if grid[row - 1][col] in ['.', 'S', 'E']:
                         open_neighbors += 1
@@ -33,7 +33,7 @@ class MazeGenerator:
                     if grid[row][col + 1] in ['.', 'S', 'E']:
                         open_neighbors += 1
 
-                    # Dead end has exactly 1 neighbor
+                    # Beco sem saída tem exatamente 1 vizinho
                     if open_neighbors == 1 and grid[row][col] not in ['S', 'E']:
                         dead_ends.append((row, col))
 
@@ -42,14 +42,14 @@ class MazeGenerator:
     @staticmethod
     def generate(size=5, algorithm='prim'):
         """
-        Generate a square maze using specified algorithm.
+        Gera um labirinto quadrado usando o algoritmo especificado.
 
         Args:
-            size: Size of the maze (will create a (2*size+1) x (2*size+1) grid)
-            algorithm: 'prim' (default) or 'backtracking'
+            size: Tamanho do labirinto (criará uma grade (2*size+1) x (2*size+1))
+            algorithm: 'prim' (padrão) ou 'backtracking'
 
         Returns:
-            list: 2D grid representing the maze with '#' walls and '.' paths
+            list: Grade 2D representando o labirinto com paredes '#' e caminhos '.'
         """
         if algorithm == 'prim':
             return MazeGenerator._generate_prim(size)
@@ -59,22 +59,22 @@ class MazeGenerator:
     @staticmethod
     def _generate_prim(size):
         """
-        Generate maze using Randomized Prim's algorithm.
-        Creates mazes with better branching and less predictable paths.
+        Gera labirinto usando o algoritmo de Prim Aleatorizado.
+        Cria labirintos com melhor ramificação e caminhos menos previsíveis.
         """
         grid_size = 2 * size + 1
         grid = [['#' for _ in range(grid_size)] for _ in range(grid_size)]
 
-        # Start from random position
+        # Começa de posição aleatória
         start_row, start_col = 1, 1
         grid[start_row][start_col] = 'S'
 
-        # Walls list - walls adjacent to visited cells
+        # Lista de paredes - paredes adjacentes a células visitadas
         walls = []
         visited = set()
         visited.add((start_row, start_col))
 
-        # Add initial walls
+        # Adiciona paredes iniciais
         directions = [(-2, 0), (0, 2), (2, 0), (0, -2)]
         for dr, dc in directions:
             wall_row, wall_col = start_row + dr // 2, start_col + dc // 2
@@ -83,17 +83,17 @@ class MazeGenerator:
                 walls.append((wall_row, wall_col, new_row, new_col))
 
         while walls:
-            # Pick random wall
+            # Escolhe parede aleatória
             wall_row, wall_col, cell_row, cell_col = walls.pop(random.randrange(len(walls)))
 
-            # If the cell on the other side hasn't been visited
+            # Se a célula do outro lado não foi visitada
             if (cell_row, cell_col) not in visited:
-                # Make the wall a passage and mark the cell as visited
+                # Torna a parede uma passagem e marca a célula como visitada
                 grid[wall_row][wall_col] = '.'
                 grid[cell_row][cell_col] = '.'
                 visited.add((cell_row, cell_col))
 
-                # Add neighboring walls of the cell
+                # Adiciona paredes vizinhas da célula
                 for dr, dc in directions:
                     wall_r, wall_c = cell_row + dr // 2, cell_col + dc // 2
                     new_r, new_c = cell_row + dr, cell_col + dc
@@ -109,8 +109,8 @@ class MazeGenerator:
     @staticmethod
     def _generate_backtracking(size):
         """
-        Generate maze using recursive backtracking (DFS).
-        Creates mazes with long corridors.
+        Gera labirinto usando backtracking recursivo (DFS).
+        Cria labirintos com corredores longos.
         """
         grid_size = 2 * size + 1
         grid = [['#' for _ in range(grid_size)] for _ in range(grid_size)]
@@ -153,7 +153,7 @@ class MazeGenerator:
 
     @staticmethod
     def _place_exit(grid, grid_size):
-        """Place exit at bottom-right area with opening."""
+        """Coloca saída na área inferior direita com abertura."""
         exit_placed = False
         for col in range(grid_size - 2, 0, -1):
             for row in range(grid_size - 2, 0, -1):
@@ -171,15 +171,15 @@ class MazeGenerator:
     @staticmethod
     def generate_rectangular(width=5, height=5, algorithm='prim'):
         """
-        Generate a rectangular maze.
+        Gera um labirinto retangular.
 
         Args:
-            width: Width of the maze in cells
-            height: Height of the maze in cells
-            algorithm: 'prim' (default) or 'backtracking'
+            width: Largura do labirinto em células
+            height: Altura do labirinto em células
+            algorithm: 'prim' (padrão) ou 'backtracking'
 
         Returns:
-            list: 2D grid representing the maze
+            list: Grade 2D representando o labirinto
         """
         grid_width = 2 * width + 1
         grid_height = 2 * height + 1
@@ -191,7 +191,7 @@ class MazeGenerator:
         directions = [(-2, 0), (0, 2), (2, 0), (0, -2)]
 
         if algorithm == 'prim':
-            # Randomized Prim's algorithm
+            # Algoritmo de Prim Aleatorizado
             walls = []
             visited = set()
             visited.add((start_row, start_col))
@@ -218,7 +218,7 @@ class MazeGenerator:
                             (new_r, new_c) not in visited):
                             walls.append((wall_r, wall_c, new_r, new_c))
         else:
-            # Recursive backtracking
+            # Backtracking recursivo
             stack = [(start_row, start_col)]
             visited = set()
             visited.add((start_row, start_col))
@@ -265,10 +265,10 @@ class MazeGenerator:
     @staticmethod
     def print_maze(grid):
         """
-        Print maze to console for debugging.
+        Imprime labirinto no console para depuração.
 
         Args:
-            grid: 2D maze grid
+            grid: Grade 2D do labirinto
         """
         for row in grid:
             print(''.join(row))

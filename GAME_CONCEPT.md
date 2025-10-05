@@ -1,65 +1,65 @@
-# Dreamrooms - Game Concept
+# Dreamrooms - Conceito do Jogo
 
-## Overview
-**Dreamrooms** is a first-person atmospheric horror maze game that explores themes of disorientation, isolation, and surreal psychological tension. Players navigate through a dark, procedurally-generated labyrinth armed only with a dim light source, while being pursued by an otherworldly entity.
+## Visão Geral
+**Dreamrooms** é um jogo de labirinto de terror atmosférico em primeira pessoa que explora temas de desorientação, isolamento e tensão psicológica surreal. Os jogadores navegam por um labirinto escuro gerado proceduralmente, armados apenas com uma fonte de luz fraca, enquanto são perseguidos por uma entidade sobrenatural.
 
-## Inspiration
+## Inspiração
 
-The game draws from multiple artistic and cultural influences to create a unique liminal horror experience:
+O jogo se inspira em múltiplas influências artísticas e culturais para criar uma experiência única de terror liminal:
 
-### **Backrooms/Liminal Spaces**
-- Endless, monotonous corridors that create a sense of being trapped
-- Familiar yet unsettling environments that feel "wrong"
-- The uncanny feeling of being in a space that shouldn't exist
+### **Backrooms/Espaços Liminais**
+- Corredores infinitos e monótonos que criam uma sensação de estar preso
+- Ambientes familiares mas perturbadores que parecem "errados"
+- A sensação estranha de estar em um espaço que não deveria existir
 
-### **Dreamcore Aesthetic**
-- Surreal, nostalgic imagery that evokes half-remembered dreams
-- Soft, warm lighting that contrasts with the dark unknown
-- Disorienting spatial logic that mirrors dream experiences
-- The boundary between reality and nightmare
+### **Estética Dreamcore**
+- Imagens surreais e nostálgicas que evocam sonhos meio esquecidos
+- Iluminação suave e quente que contrasta com o desconhecido escuro
+- Lógica espacial desorientadora que espelha experiências de sonhos
+- A fronteira entre realidade e pesadelo
 
 ### **David Lynch (Twin Peaks, Lost Highway)**
-- Mysterious, psychological thriller atmosphere
-- Surreal narrative that exists between reality and dream
-- Ambient dread and subtle horror
-- The feeling that something is fundamentally "off"
+- Atmosfera misteriosa de thriller psicológico
+- Narrativa surreal que existe entre realidade e sonho
+- Pavor ambiente e terror sutil
+- A sensação de que algo está fundamentalmente "errado"
 
 ### **David Bowie**
-- Experimental, avant-garde aesthetics
-- Otherworldly, alienating atmosphere
-- Art as a transformative, unsettling experience
+- Estética experimental e vanguardista
+- Atmosfera sobrenatural e alienante
+- Arte como uma experiência transformadora e perturbadora
 
-## Core Themes
+## Temas Centrais
 
-### **Isolation**
-The player is alone in an endless maze with only a small circle of light for comfort. The darkness presses in from all sides, and the silence is broken only by footsteps and the distant presence of the enemy.
+### **Isolamento**
+O jogador está sozinho em um labirinto infinito com apenas um pequeno círculo de luz para conforto. A escuridão pressiona de todos os lados, e o silêncio é quebrado apenas por passos e a presença distante do inimigo.
 
-### **Disorientation**
-The procedurally-generated maze ensures that each playthrough is different. The limited visibility and similar-looking corridors create confusion and a loss of spatial awareness, mirroring the logic of dreams.
+### **Desorientação**
+O labirinto gerado proceduralmente garante que cada partida seja diferente. A visibilidade limitada e os corredores de aparência similar criam confusão e perda de consciência espacial, espelhando a lógica dos sonhos.
 
-### **Pursuit**
-An unseen enemy stalks the player through the maze. Once spotted, the chase begins - a desperate flight through twisting corridors with death always close behind.
+### **Perseguição**
+Um inimigo invisível espreita o jogador pelo labirinto. Uma vez avistado, a perseguição começa - uma fuga desesperada por corredores tortuosos com a morte sempre próxima.
 
-### **Liminal Dread**
-The game evokes the feeling of being stuck "between" - between waking and sleeping, between safety and danger, between the familiar and the utterly alien.
+### **Pavor Liminal**
+O jogo evoca a sensação de estar preso "entre" - entre acordar e dormir, entre segurança e perigo, entre o familiar e o completamente alienígena.
 
-## Gameplay Philosophy
+## Filosofia de Gameplay
 
-**Dreamrooms** is not about jump scares or gore. Instead, it cultivates a persistent sense of unease through:
+**Dreamrooms** não é sobre sustos repentinos ou gore. Em vez disso, cultiva uma sensação persistente de inquietação através de:
 
-- **Limited perception**: The small cone of light creates constant uncertainty about what lies in the darkness
-- **Sound design**: Atmospheric soundtrack and audio cues that reinforce the dreamlike quality
-- **Environmental storytelling**: The maze itself tells the story through its oppressive architecture
-- **Minimal UI**: No health bars, minimaps, or objective markers - just you, the light, and the maze
+- **Percepção limitada**: O pequeno cone de luz cria incerteza constante sobre o que está na escuridão
+- **Design de som**: Trilha sonora atmosférica e pistas de áudio que reforçam a qualidade onírica
+- **Narrativa ambiental**: O próprio labirinto conta a história através de sua arquitetura opressiva
+- **UI mínima**: Sem barras de vida, minimapas ou marcadores de objetivo - apenas você, a luz e o labirinto
 
-## Victory and Defeat
+## Vitória e Derrota
 
-**Victory**: Find the exit before being caught. The maze reveals itself in full light, and haunting outro music plays as credits roll.
+**Vitória**: Encontre a saída antes de ser capturado. O labirinto se revela com luz plena, e uma música de encerramento assombrosa toca enquanto os créditos rolam.
 
-**Defeat**: The enemy catches you. The screen fades to semi-transparent black, "GAME OVER" appears in blood red, and death music plays. There is no escape - only the ESC key to exit.
+**Derrota**: O inimigo te captura. A tela desaparece para um preto semi-transparente, "GAME OVER" aparece em vermelho sangue, e a música da morte toca. Não há escapatória - apenas a tecla ESC para sair.
 
-## The Experience
+## A Experiência
 
-Playing **Dreamrooms** should feel like being trapped inside a half-remembered nightmare - familiar enough to navigate, strange enough to unsettle, and dangerous enough to create genuine tension. Every corner could lead to safety or to the thing that's been following you. Every dead end could be a trap.
+Jogar **Dreamrooms** deve parecer estar preso dentro de um pesadelo meio esquecido - familiar o suficiente para navegar, estranho o suficiente para perturbar, e perigoso o suficiente para criar tensão genuína. Cada esquina pode levar à segurança ou à coisa que está te seguindo. Cada beco sem saída pode ser uma armadilha.
 
-The game asks: *What happens when you're lost in a space that exists only in dreams? And what if you're not alone?*
+O jogo pergunta: *O que acontece quando você está perdido em um espaço que existe apenas em sonhos? E se você não está sozinho?*

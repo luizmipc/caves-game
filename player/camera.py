@@ -4,42 +4,42 @@ import pygame
 class Camera:
     def __init__(self, sensitivity=0.1):
         """
-        Initialize camera with rotation angles.
+        Inicializa a câmera com ângulos de rotação.
 
         Args:
-            sensitivity: Mouse sensitivity for camera rotation
+            sensitivity: Sensibilidade do mouse para rotação da câmera
         """
-        self.yaw = 0.0  # Horizontal rotation (left/right)
-        self.pitch = 0.0  # Vertical rotation (up/down)
+        self.yaw = 0.0  # Rotação horizontal (esquerda/direita)
+        self.pitch = 0.0  # Rotação vertical (cima/baixo)
         self.sensitivity = sensitivity
 
     def handle_mouse_motion(self, dx, dy):
         """
-        Handle mouse movement for camera rotation.
+        Lida com o movimento do mouse para rotação da câmera.
 
         Args:
-            dx: Mouse movement in x direction
-            dy: Mouse movement in y direction
+            dx: Movimento do mouse na direção x
+            dy: Movimento do mouse na direção y
         """
         self.yaw += dx * self.sensitivity
         self.pitch += dy * self.sensitivity
 
-        # Clamp pitch to prevent camera flipping
+        # Limita o pitch para evitar que a câmera vire de cabeça para baixo
         self.pitch = max(-89.0, min(89.0, self.pitch))
 
     def get_rotation(self):
         """
-        Get the rotation angles for applying to OpenGL view matrix.
+        Obtém os ângulos de rotação para aplicar à matriz de visualização do OpenGL.
 
         Returns:
-            tuple: (pitch, yaw) in degrees
+            tuple: (pitch, yaw) em graus
         """
         return (self.pitch, self.yaw)
 
     def get_yaw(self):
-        """Get the current yaw angle in degrees."""
+        """Obtém o ângulo yaw atual em graus."""
         return self.yaw
 
     def get_pitch(self):
-        """Get the current pitch angle in degrees."""
+        """Obtém o ângulo pitch atual em graus."""
         return self.pitch

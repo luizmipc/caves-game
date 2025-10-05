@@ -1,6 +1,6 @@
 """
-OpenGL lighting setup module.
-Handles all OpenGL lighting configuration.
+Módulo de configuração de iluminação OpenGL.
+Lida com toda configuração de iluminação OpenGL.
 """
 
 from OpenGL.GL import *
@@ -8,78 +8,78 @@ import numpy as np
 
 
 class LightingSetup:
-    """Manages OpenGL lighting setup."""
+    """Gerencia configuração de iluminação OpenGL."""
 
     @staticmethod
     def setup_global_lighting(global_ambient):
         """
-        Setup global lighting parameters.
+        Configura parâmetros globais de iluminação.
 
         Args:
-            global_ambient: Global ambient light color [r, g, b, a]
+            global_ambient: Cor da luz ambiente global [r, g, b, a]
         """
-        # Set global ambient
+        # Define luz ambiente global
         glLightModelfv(GL_LIGHT_MODEL_AMBIENT, global_ambient)
 
-        # Two-sided lighting so both sides of polygons are lit
+        # Iluminação de dois lados para que ambos os lados dos polígonos sejam iluminados
         glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE)
 
     @staticmethod
     def setup_fog(fog_color, fog_start, fog_end, fog_density):
         """
-        Setup fog for depth perception.
+        Configura neblina para percepção de profundidade.
 
         Args:
-            fog_color: Fog color [r, g, b, a]
-            fog_start: Distance where fog starts
-            fog_end: Distance where fog is complete
-            fog_density: Fog density (for exponential fog)
+            fog_color: Cor da neblina [r, g, b, a]
+            fog_start: Distância onde a neblina começa
+            fog_end: Distância onde a neblina é completa
+            fog_density: Densidade da neblina (para neblina exponencial)
         """
         glEnable(GL_FOG)
-        glFogi(GL_FOG_MODE, GL_LINEAR)  # Linear fog for predictable falloff
+        glFogi(GL_FOG_MODE, GL_LINEAR)  # Neblina linear para queda previsível
         glFogfv(GL_FOG_COLOR, fog_color)
         glFogf(GL_FOG_START, fog_start)
         glFogf(GL_FOG_END, fog_end)
-        glHint(GL_FOG_HINT, GL_NICEST)  # Best quality fog
+        glHint(GL_FOG_HINT, GL_NICEST)  # Neblina de melhor qualidade
 
     @staticmethod
     def setup_spotlight(position, direction, cutoff_angle, exponent,
                        diffuse_color, ambient_color, specular_color,
                        constant_atten, linear_atten, quadratic_atten):
         """
-        Setup spotlight parameters.
+        Configura parâmetros do spotlight.
 
         Args:
-            position: Light position [x, y, z, w]
-            direction: Light direction [x, y, z]
-            cutoff_angle: Spotlight cone angle in degrees
-            exponent: Spotlight falloff exponent
-            diffuse_color: Diffuse color [r, g, b, a]
-            ambient_color: Ambient color [r, g, b, a]
-            specular_color: Specular color [r, g, b, a]
-            constant_atten: Constant attenuation
-            linear_atten: Linear attenuation
-            quadratic_atten: Quadratic attenuation
+            position: Posição da luz [x, y, z, w]
+            direction: Direção da luz [x, y, z]
+            cutoff_angle: Ângulo do cone do spotlight em graus
+            exponent: Expoente de queda do spotlight
+            diffuse_color: Cor difusa [r, g, b, a]
+            ambient_color: Cor ambiente [r, g, b, a]
+            specular_color: Cor especular [r, g, b, a]
+            constant_atten: Atenuação constante
+            linear_atten: Atenuação linear
+            quadratic_atten: Atenuação quadrática
         """
-        # Enable lighting
+        # Habilita iluminação
         glEnable(GL_LIGHTING)
         glEnable(GL_LIGHT0)
 
-        # Position the light (positional light)
+        # Posiciona a luz (luz posicional)
         light_pos = np.array([position[0], position[1], position[2], 1.0], dtype=np.float32)
         glLightfv(GL_LIGHT0, GL_POSITION, light_pos)
 
-        # Set spotlight direction
+        # Define direção do spotlight
         glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, direction)
         glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, cutoff_angle)
         glLightf(GL_LIGHT0, GL_SPOT_EXPONENT, exponent)
 
-        # Set light colors
+        # Define cores da luz
         glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse_color)
         glLightfv(GL_LIGHT0, GL_AMBIENT, ambient_color)
         glLightfv(GL_LIGHT0, GL_SPECULAR, specular_color)
 
-        # Set attenuation
+        # Define atenuação
         glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION, constant_atten)
         glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, linear_atten)
         glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, quadratic_atten)
@@ -87,35 +87,35 @@ class LightingSetup:
     @staticmethod
     def setup_material_properties(ambient, diffuse, specular, shininess):
         """
-        Setup default material properties.
+        Configura propriedades padrão do material.
 
         Args:
-            ambient: Material ambient color [r, g, b, a]
-            diffuse: Material diffuse color [r, g, b, a]
-            specular: Material specular color [r, g, b, a]
-            shininess: Material shininess value
+            ambient: Cor ambiente do material [r, g, b, a]
+            diffuse: Cor difusa do material [r, g, b, a]
+            specular: Cor especular do material [r, g, b, a]
+            shininess: Valor de brilho do material
         """
         glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, ambient)
         glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse)
         glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular)
         glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shininess)
 
-        # Enable color material
+        # Habilita material de cor
         glEnable(GL_COLOR_MATERIAL)
         glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)
 
-        # Enable automatic normal rescaling for better lighting accuracy
-        glEnable(GL_RESCALE_NORMAL)  # More efficient than GL_NORMALIZE
+        # Habilita reescalonamento automático de normais para melhor precisão de iluminação
+        glEnable(GL_RESCALE_NORMAL)  # Mais eficiente que GL_NORMALIZE
 
-        # Enable smooth shading for gradual light transitions
+        # Habilita sombreamento suave para transições graduais de luz
         glShadeModel(GL_SMOOTH)
 
-        # Enable local viewer for more accurate specular highlights
+        # Habilita visualizador local para destaques especulares mais precisos
         glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE)
 
     @staticmethod
     def disable_lighting():
-        """Disable all lighting."""
+        """Desabilita toda iluminação."""
         glDisable(GL_LIGHTING)
         glDisable(GL_LIGHT0)
         glDisable(GL_COLOR_MATERIAL)

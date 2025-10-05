@@ -1,30 +1,30 @@
 #!/usr/bin/env python3
 """
-Dreamrooms - A 3D maze game with first-person player movement.
+Dreamrooms - Um jogo de labirinto 3D com movimento em primeira pessoa.
 
-A liminal horror experience inspired by:
-- Backrooms/Liminal Spaces
-- Dreamcore aesthetics
-- David Lynch (Twin Peaks, Lost Highway)
-- David Bowie's experimental art
+Uma experiência de terror liminal inspirada por:
+- Backrooms/Espaços Liminais
+- Estética Dreamcore
+- David Lynch (Twin Peaks, Estrada Perdida)
+- Arte experimental de David Bowie
 
-Controls:
-- WASD: Move around
-- Mouse: Look around
-- ESC: Exit
+Controles:
+- WASD: Movimentar
+- Mouse: Olhar ao redor
+- ESC: Sair
 """
 
-# Standard library imports
+# Importações da biblioteca padrão
 import os
 
-# Third-party imports
+# Importações de terceiros
 import pygame
 from pygame.locals import *
 from OpenGL.GL import *
 from OpenGL.GLU import *
 import numpy as np
 
-# Game module imports
+# Importações dos módulos do jogo
 from player.player import Player
 from place.place import Place
 from menu import Menu
@@ -34,91 +34,91 @@ from config import game_config
 from light.light import LightBall
 
 
-# Path to background music file
+# Caminho para o arquivo de música de fundo
 SOUNDTRACK_PATH = "assets/audio/soundtrack.mp3"
 
 
 def load_soundtrack():
     """
-    Load and play background soundtrack in an infinite loop.
+    Carrega e reproduz a trilha sonora de fundo em loop infinito.
 
-    The soundtrack plays during gameplay to create atmosphere.
-    If the file doesn't exist, the game continues without music.
+    A trilha sonora toca durante o jogo para criar atmosfera.
+    Se o arquivo não existir, o jogo continua sem música.
     """
     if os.path.exists(SOUNDTRACK_PATH):
         try:
-            # Initialize pygame's audio mixer
+            # Inicializa o mixer de áudio do pygame
             pygame.mixer.init()
-            # Load the music file
+            # Carrega o arquivo de música
             pygame.mixer.music.load(SOUNDTRACK_PATH)
-            # Set volume based on config
+            # Define o volume baseado na configuração
             pygame.mixer.music.set_volume(game_config.music_volume)
-            # Play in loop if music is enabled (-1 = infinite loop)
+            # Toca em loop se a música estiver habilitada (-1 = loop infinito)
             if game_config.music_enabled:
                 pygame.mixer.music.play(-1)
         except Exception as e:
-            print(f"Could not load soundtrack: {e}")
+            print(f"Não foi possível carregar a trilha sonora: {e}")
 
 
 def update_music():
     """
-    Update music playback based on current config settings.
+    Atualiza a reprodução de música baseado nas configurações atuais.
 
-    Called from config screen to apply changes without restarting.
-    Handles volume adjustments and enable/disable toggling.
+    Chamado pela tela de configuração para aplicar mudanças sem reiniciar.
+    Gerencia ajustes de volume e alternância de ligar/desligar.
     """
-    # Update volume to match current config
+    # Atualiza o volume para corresponder à configuração atual
     pygame.mixer.music.set_volume(game_config.music_volume)
 
-    # Start music if enabled and not already playing
+    # Inicia música se habilitada e não estiver tocando
     if game_config.music_enabled and not pygame.mixer.music.get_busy():
         pygame.mixer.music.play(-1)
-    # Stop music if disabled and currently playing
+    # Para música se desabilitada e estiver tocando
     elif not game_config.music_enabled and pygame.mixer.music.get_busy():
         pygame.mixer.music.stop()
 
 
 def show_config(width, height):
     """
-    Display the configuration/settings screen.
+    Exibe a tela de configuração/ajustes.
 
     Args:
-        width: Window width in pixels
-        height: Window height in pixels
+        width: Largura da janela em pixels
+        height: Altura da janela em pixels
 
     Returns:
-        str: Action to take ('menu' to return to menu, 'quit' to exit game)
+        str: Ação a tomar ('menu' para retornar ao menu, 'quit' para sair do jogo)
     """
-    # Create 2D display for config UI
+    # Cria display 2D para interface de configuração
     screen = pygame.display.set_mode((width, height))
     pygame.display.set_caption("Dreamrooms - Config")
 
     config_screen = ConfigScreen(width, height)
     clock = pygame.time.Clock()
 
-    # Config screen loop
+    # Loop da tela de configuração
     while True:
-        # Handle events (mouse clicks, keyboard, window close)
+        # Trata eventos (cliques do mouse, teclado, fechar janela)
         for event in pygame.event.get():
             if event.type == QUIT:
                 return 'quit'
 
-            # Let config screen handle the event
+            # Deixa a tela de configuração tratar o evento
             action = config_screen.handle_event(event)
             if action == 'back':
                 return 'menu'
 
-        # Apply music setting changes in real-time
+        # Aplica mudanças de configuração de música em tempo real
         update_music()
 
-        # Draw config screen UI
+        # Desenha interface da tela de configuração
         config_screen.render(screen)
         pygame.display.flip()
         clock.tick(60)  # 60 FPS
 
 
 def show_victory(width, height):
-    """Show the victory screen with credits."""
+    """Exibe a tela de vitória com créditos."""
     screen = pygame.display.set_mode((width, height))
     pygame.display.set_caption("Dreamrooms - Victory!")
 
@@ -142,7 +142,7 @@ def show_victory(width, height):
 
 
 def show_menu(width, height):
-    """Show the main menu and return user choice."""
+    """Exibe o menu principal e retorna a escolha do usuário."""
     screen = pygame.display.set_mode((width, height))
     pygame.display.set_caption("Dreamrooms - Menu")
 
@@ -165,50 +165,50 @@ def show_menu(width, height):
 
 def setup_opengl(width, height):
     """
-    Initialize OpenGL rendering settings for 3D view.
+    Inicializa as configurações de renderização OpenGL para visualização 3D.
 
-    Sets up the perspective camera and enables depth testing.
+    Configura a câmera em perspectiva e habilita teste de profundidade.
 
     Args:
-        width: Window width in pixels
-        height: Window height in pixels
+        width: Largura da janela em pixels
+        height: Altura da janela em pixels
     """
-    # Enable depth testing for proper 3D occlusion
+    # Habilita teste de profundidade para oclusão 3D adequada
     glEnable(GL_DEPTH_TEST)
 
-    # Set the viewport to match window dimensions
+    # Define o viewport para corresponder às dimensões da janela
     glViewport(0, 0, width, height)
 
-    # Configure perspective projection matrix
+    # Configura matriz de projeção em perspectiva
     glMatrixMode(GL_PROJECTION)
     glLoadIdentity()
-    # FOV=45°, aspect ratio, near=0.1, far=1000 (extended for outside environment)
+    # FOV=45°, proporção de aspecto, perto=0.1, longe=1000 (estendido para ambiente externo)
     gluPerspective(45, width / height, 0.1, 1000.0)
 
-    # Switch back to modelview matrix for rendering
+    # Volta para matriz modelview para renderização
     glMatrixMode(GL_MODELVIEW)
 
 
 def main():
     """
-    Main entry point for Dreamrooms.
+    Ponto de entrada principal para Dreamrooms.
 
-    Game Flow:
-    1. Initialize Pygame and audio
-    2. Show main menu (Play/Config/Quit)
-    3. If Play selected, generate maze and start game loop
-    4. Game loop: Handle input, update physics/AI, render 3D scene
-    5. Victory (reach exit) or Game Over (caught by enemy)
-    6. Exit to operating system
+    Fluxo do Jogo:
+    1. Inicializa Pygame e áudio
+    2. Exibe menu principal (Jogar/Configuração/Sair)
+    3. Se Jogar for selecionado, gera labirinto e inicia loop do jogo
+    4. Loop do jogo: Trata entrada, atualiza física/IA, renderiza cena 3D
+    5. Vitória (alcançar saída) ou Game Over (capturado pelo inimigo)
+    6. Sai para o sistema operacional
     """
-    # ===== INITIALIZATION =====
+    # ===== INICIALIZAÇÃO =====
     pygame.init()
     width, height = 800, 600
 
-    # Load and play background soundtrack
+    # Carrega e reproduz trilha sonora de fundo
     load_soundtrack()
 
-    # ===== MENU LOOP =====
+    # ===== LOOP DO MENU =====
     while True:
         action = show_menu(width, height)
 
@@ -216,48 +216,48 @@ def main():
             pygame.quit()
             return
         elif action == 'config':
-            # Show settings screen
+            # Exibe tela de configurações
             config_action = show_config(width, height)
             if config_action == 'quit':
                 pygame.quit()
                 return
-            # If 'menu' returned, loop continues to show menu again
+            # Se 'menu' for retornado, loop continua para mostrar menu novamente
         elif action == 'play':
-            break  # Exit menu loop and start game
+            break  # Sai do loop do menu e inicia jogo
 
-    # ===== GAME SETUP =====
+    # ===== CONFIGURAÇÃO DO JOGO =====
 
-    # Create OpenGL context with double buffering
+    # Cria contexto OpenGL com buffer duplo
     pygame.display.set_mode((width, height), DOUBLEBUF | OPENGL)
     pygame.display.set_caption("Dreamrooms - WASD to move, Mouse to look")
 
-    # Hide mouse cursor and lock it to window for FPS controls
+    # Esconde cursor do mouse e o trava na janela para controles FPS
     pygame.mouse.set_visible(False)
     pygame.event.set_grab(True)
 
-    # Initialize OpenGL settings (perspective, depth test)
+    # Inicializa configurações OpenGL (perspectiva, teste de profundidade)
     setup_opengl(width, height)
 
-    # Create the game world (maze, floor, walls, enemy)
+    # Cria o mundo do jogo (labirinto, chão, paredes, inimigo)
     place = Place()
 
-    # Spawn player at maze start position
+    # Gera jogador na posição inicial do labirinto
     if place.start_pos:
         player = Player(x=place.start_pos[0], y=place.start_pos[1], z=place.start_pos[2])
     else:
-        # Fallback position if no start defined
+        # Posição de fallback se nenhuma posição inicial foi definida
         player = Player(x=0, y=1.7, z=5)
 
-    # Create the player's light source (torch-like spotlight)
-    # Parameters: distance from player, height offset, visual radius, light range
+    # Cria a fonte de luz do jogador (spotlight tipo tocha)
+    # Parâmetros: distância do jogador, deslocamento de altura, raio visual, alcance da luz
     light_ball = LightBall(distance=0.8, height_offset=-0.5, radius=0.15, light_range=15.0)
 
-    # ===== GAME LOOP VARIABLES =====
-    clock = pygame.time.Clock()  # For frame rate control
-    running = True  # Main loop control
-    game_over = False  # Becomes True when enemy catches player
+    # ===== VARIÁVEIS DO LOOP DO JOGO =====
+    clock = pygame.time.Clock()  # Para controle de taxa de quadros
+    running = True  # Controle do loop principal
+    game_over = False  # Torna-se True quando inimigo captura jogador
 
-    # Victory/Game Over overlay system
+    # Sistema de sobreposição de Vitória/Game Over
     credits_font = pygame.font.Font(None, 40)
     credits_lines = [
         "Credits:",
@@ -267,69 +267,69 @@ def main():
         "Matheus Soares Martins",
         "Thiago Crivaro Nunes"
     ]
-    show_credits = False  # Toggle for victory/game over overlay
-    credits_textures = []  # OpenGL textures for text rendering
+    show_credits = False  # Alternador para sobreposição de vitória/game over
+    credits_textures = []  # Texturas OpenGL para renderização de texto
 
-    # ===== MAIN GAME LOOP =====
+    # ===== LOOP PRINCIPAL DO JOGO =====
     while running:
-        # ===== EVENT HANDLING =====
+        # ===== TRATAMENTO DE EVENTOS =====
         for event in pygame.event.get():
             if event.type == QUIT:
                 running = False
 
             elif event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
-                    # ESC always works (even during game over)
+                    # ESC sempre funciona (mesmo durante game over)
                     running = False
                 elif not game_over:
-                    # Only process player input if game is still active
+                    # Só processa entrada do jogador se jogo ainda está ativo
                     player.handle_key_down(event.key)
 
             elif event.type == KEYUP:
                 if not game_over:
-                    # Release key (stop movement)
+                    # Libera tecla (para movimento)
                     player.handle_key_up(event.key)
 
             elif event.type == MOUSEMOTION:
                 if not game_over:
-                    # Update camera rotation based on mouse movement
+                    # Atualiza rotação da câmera baseado no movimento do mouse
                     player.handle_mouse_motion(event.rel[0], event.rel[1])
 
-        # ===== UPDATE PHASE =====
-        # Calculate frame time for smooth physics (60 FPS target)
-        delta_time = clock.tick(60) / 1000.0  # Convert milliseconds to seconds
+        # ===== FASE DE ATUALIZAÇÃO =====
+        # Calcula tempo do quadro para física suave (alvo de 60 FPS)
+        delta_time = clock.tick(60) / 1000.0  # Converte milissegundos para segundos
 
-        # Update player movement and physics (only if game is active)
+        # Atualiza movimento e física do jogador (só se jogo está ativo)
         if not game_over:
             player.update(delta_time, collision_check=place.framework.check_collision)
 
-        # Get current player position for AI and victory detection
+        # Obtém posição atual do jogador para IA e detecção de vitória
         x, y, z = player.get_position()
 
-        # Update enemy AI and check if player was caught
+        # Atualiza IA do inimigo e verifica se jogador foi capturado
         player_caught = False
         if not game_over:
             player_caught = place.update(delta_time, x, z)
 
-        # Check if enemy caught the player
+        # Verifica se inimigo capturou o jogador
         if player_caught and not show_credits:
-            # Game Over - Play death audio and show game over screen
-            game_over = True  # Set game over flag to freeze player
+            # Game Over - Toca áudio de morte e mostra tela de game over
+            game_over = True  # Define flag de game over para congelar jogador
             death_audio_path = "assets/audio/death.mp3"
             if os.path.exists(death_audio_path):
                 try:
                     pygame.mixer.music.load(death_audio_path)
                     pygame.mixer.music.play()
                 except Exception as e:
-                    print(f"Could not play death audio: {e}")
+                    print(f"Não foi possível reproduzir áudio de morte: {e}")
 
-            # Generate game over text texture
-            show_credits = True  # Reuse credits overlay system for game over
+            # Gera textura de texto de game over
+            show_credits = True  # Reutiliza sistema de sobreposição de créditos para game over
             credits_textures = []
             game_over_font = pygame.font.Font(None, 100)
             game_over_surf = game_over_font.render("GAME OVER", True, (255, 0, 0))
 
-            # Convert to OpenGL texture
+            # Converte para textura OpenGL
             texture_data = pygame.image.tostring(game_over_surf, "RGBA", True)
             tex_width = game_over_surf.get_width()
             tex_height = game_over_surf.get_height()
@@ -342,12 +342,12 @@ def main():
 
             credits_textures.append(('game_over', texture_id, tex_width, tex_height))
 
-        # Check if player reached the exit (trigger victory once)
+        # Verifica se jogador alcançou a saída (dispara vitória uma vez)
         if place.end_pos and not show_credits:
             exit_x, exit_y, exit_z = place.end_pos
             distance_to_exit = np.sqrt((x - exit_x)**2 + (z - exit_z)**2)
-            if distance_to_exit < 2.0:  # Player is close to exit
-                # Victory! Start outro music and show credits overlay
+            if distance_to_exit < 2.0:  # Jogador está perto da saída
+                # Vitória! Inicia música de encerramento e mostra sobreposição de créditos
                 show_credits = True
                 autro_path = "assets/audio/autro.mp3"
                 if os.path.exists(autro_path):
@@ -355,9 +355,9 @@ def main():
                         pygame.mixer.music.load(autro_path)
                         pygame.mixer.music.play(-1)
                     except Exception as e:
-                        print(f"Could not load outro music: {e}")
+                        print(f"Não foi possível carregar música de encerramento: {e}")
 
-                # Generate text textures for credits
+                # Gera texturas de texto para créditos
                 credits_textures = []
                 title_font = pygame.font.Font(None, 60)
                 title_surf = title_font.render("VICTORY!", True, (255, 215, 0))
@@ -367,7 +367,7 @@ def main():
                     text_surf = credits_font.render(line, True, (200, 200, 200))
                     credits_textures.append(('line', text_surf))
 
-                # Convert pygame surfaces to OpenGL textures
+                # Converte superfícies pygame para texturas OpenGL
                 for i, (text_type, surf) in enumerate(credits_textures):
                     texture_data = pygame.image.tostring(surf, "RGBA", True)
                     tex_width = surf.get_width()
@@ -381,45 +381,45 @@ def main():
 
                     credits_textures[i] = (text_type, texture_id, tex_width, tex_height)
 
-        # Render
+        # Renderização
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         glLoadIdentity()
 
-        # Apply camera transformations
+        # Aplica transformações da câmera
         pitch, yaw = player.get_view_matrix_rotation()
         glRotatef(pitch, 1, 0, 0)
         glRotatef(yaw, 0, 1, 0)
 
         glTranslatef(-x, -y, -z)
 
-        # Update and render light ball (sets up lighting and renders the glowing orb)
-        # If victory, set max ambient light to reveal the entire maze
+        # Atualiza e renderiza bola de luz (configura iluminação e renderiza o orbe brilhante)
+        # Se vitória, define luz ambiente máxima para revelar todo o labirinto
         if show_credits:
             glEnable(GL_LIGHTING)
             glEnable(GL_LIGHT0)
-            glLightModelfv(GL_LIGHT_MODEL_AMBIENT, [1.0, 1.0, 1.0, 1.0])  # Max ambient
-            glLightfv(GL_LIGHT0, GL_DIFFUSE, [0.0, 0.0, 0.0, 1.0])  # Disable spotlight
+            glLightModelfv(GL_LIGHT_MODEL_AMBIENT, [1.0, 1.0, 1.0, 1.0])  # Luz ambiente máxima
+            glLightfv(GL_LIGHT0, GL_DIFFUSE, [0.0, 0.0, 0.0, 1.0])  # Desabilita spotlight
             glEnable(GL_COLOR_MATERIAL)
             glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)
         else:
             light_ball.update_and_render(x, y, z, yaw, pitch, collision_check=place.framework.check_collision)
 
-        # Render the scene
+        # Renderiza a cena
         place.render()
 
-        # Render enemy (needs to be rendered separately for billboard)
+        # Renderiza inimigo (precisa ser renderizado separadamente para billboard)
         place.render_enemy(x, z)
 
-        # Disable lighting before UI rendering
+        # Desabilita iluminação antes de renderizar interface
         if not show_credits:
             light_ball.disable_lighting()
         else:
             glDisable(GL_LIGHTING)
             glDisable(GL_LIGHT0)
 
-        # Draw credits overlay if victory triggered (2D overlay using OpenGL)
+        # Desenha sobreposição de créditos se vitória foi disparada (sobreposição 2D usando OpenGL)
         if show_credits and credits_textures:
-            # Switch to 2D orthographic projection
+            # Muda para projeção ortográfica 2D
             glMatrixMode(GL_PROJECTION)
             glPushMatrix()
             glLoadIdentity()
@@ -428,13 +428,13 @@ def main():
             glPushMatrix()
             glLoadIdentity()
 
-            # Disable depth test for 2D overlay
+            # Desabilita teste de profundidade para sobreposição 2D
             glDisable(GL_DEPTH_TEST)
 
-            # Draw semi-transparent background box
+            # Desenha caixa de fundo semi-transparente
             glEnable(GL_BLEND)
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
-            glColor4f(0.0, 0.0, 0.0, 0.7)  # Semi-transparent black
+            glColor4f(0.0, 0.0, 0.0, 0.7)  # Preto semi-transparente
             glBegin(GL_QUADS)
             glVertex2f(0, 0)
             glVertex2f(width, 0)
@@ -442,18 +442,18 @@ def main():
             glVertex2f(0, height)
             glEnd()
 
-            # Enable texturing
+            # Habilita texturização
             glEnable(GL_TEXTURE_2D)
             glColor4f(1.0, 1.0, 1.0, 1.0)
 
-            # Draw text textures
+            # Desenha texturas de texto
             y_pos = 70
             for text_type, texture_id, tex_width, tex_height in credits_textures:
                 glBindTexture(GL_TEXTURE_2D, texture_id)
 
-                x_pos = width // 2 - tex_width // 2  # Center text
+                x_pos = width // 2 - tex_width // 2  # Centraliza texto
 
-                # For game over, center vertically too
+                # Para game over, centraliza verticalmente também
                 if text_type == 'game_over':
                     y_pos = height // 2 - tex_height // 2
 
@@ -476,13 +476,13 @@ def main():
             glDisable(GL_TEXTURE_2D)
             glDisable(GL_BLEND)
 
-            # Restore 3D projection
+            # Restaura projeção 3D
             glPopMatrix()
             glMatrixMode(GL_PROJECTION)
             glPopMatrix()
             glMatrixMode(GL_MODELVIEW)
 
-            # Re-enable depth test
+            # Reabilita teste de profundidade
             glEnable(GL_DEPTH_TEST)
 
         pygame.display.flip()

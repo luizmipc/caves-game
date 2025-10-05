@@ -1,6 +1,6 @@
 """
-Light mathematics module.
-Handles vector calculations for lighting.
+Módulo de matemática de luz.
+Lida com cálculos vetoriais para iluminação.
 """
 
 import numpy as np
@@ -8,14 +8,14 @@ import numpy as np
 
 def calculate_direction_vector(yaw, pitch):
     """
-    Calculate direction vector from yaw and pitch angles.
+    Calcula vetor de direção a partir dos ângulos yaw e pitch.
 
     Args:
-        yaw: Horizontal rotation angle in degrees
-        pitch: Vertical rotation angle in degrees
+        yaw: Ângulo de rotação horizontal em graus
+        pitch: Ângulo de rotação vertical em graus
 
     Returns:
-        numpy.ndarray: Direction vector [x, y, z]
+        numpy.ndarray: Vetor de direção [x, y, z]
     """
     yaw_rad = np.radians(yaw)
     pitch_rad = np.radians(pitch)
@@ -29,16 +29,16 @@ def calculate_direction_vector(yaw, pitch):
 
 def calculate_light_position(player_pos, direction, distance, height_offset):
     """
-    Calculate light position based on player position and direction.
+    Calcula posição da luz baseada na posição e direção do jogador.
 
     Args:
-        player_pos: Player position [x, y, z]
-        direction: Direction vector [x, y, z]
-        distance: Distance from player
-        height_offset: Vertical offset
+        player_pos: Posição do jogador [x, y, z]
+        direction: Vetor de direção [x, y, z]
+        distance: Distância do jogador
+        height_offset: Deslocamento vertical
 
     Returns:
-        numpy.ndarray: Light position [x, y, z]
+        numpy.ndarray: Posição da luz [x, y, z]
     """
     position = player_pos + direction * distance
     position[1] += height_offset
@@ -48,19 +48,19 @@ def calculate_light_position(player_pos, direction, distance, height_offset):
 def check_collision_and_adjust(player_pos, direction, distance, collision_check,
                                 min_distance, distance_step, check_radius):
     """
-    Check for collisions and adjust distance if needed.
+    Verifica colisões e ajusta distância se necessário.
 
     Args:
-        player_pos: Player position [x, y, z]
-        direction: Direction vector [x, y, z]
-        distance: Initial distance from player
-        collision_check: Collision checking function
-        min_distance: Minimum allowed distance
-        distance_step: Step size for distance reduction
-        check_radius: Radius for collision checking
+        player_pos: Posição do jogador [x, y, z]
+        direction: Vetor de direção [x, y, z]
+        distance: Distância inicial do jogador
+        collision_check: Função de verificação de colisão
+        min_distance: Distância mínima permitida
+        distance_step: Tamanho do passo para redução de distância
+        check_radius: Raio para verificação de colisão
 
     Returns:
-        float: Adjusted distance
+        float: Distância ajustada
     """
     check_distance = distance
 

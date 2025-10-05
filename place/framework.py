@@ -3,66 +3,66 @@ from collision.framework import CollisionFramework, Collidable
 
 
 class PlaceElement(ABC):
-    """Abstract base class for place elements that can be rendered."""
+    """Classe base abstrata para elementos de cenário que podem ser renderizados."""
 
     @abstractmethod
     def render(self):
-        """Render this place element."""
+        """Renderiza este elemento de cenário."""
         pass
 
 
 class PlaceFramework:
-    """Framework for managing and rendering place elements."""
+    """Framework para gerenciar e renderizar elementos de cenário."""
 
     def __init__(self):
-        """Initialize the place framework."""
+        """Inicializa o framework de cenário."""
         self.elements = []
         self.collision_framework = CollisionFramework()
 
     def add_element(self, element):
         """
-        Add a renderable element to the place.
+        Adiciona um elemento renderizável ao cenário.
 
         Args:
-            element: A PlaceElement instance to add
+            element: Uma instância de PlaceElement para adicionar
         """
         if not isinstance(element, PlaceElement):
             raise TypeError("Element must inherit from PlaceElement")
         self.elements.append(element)
 
-        # If element is also collidable, add to collision framework
+        # Se o elemento também é colidível, adiciona ao framework de colisão
         if isinstance(element, Collidable):
             self.collision_framework.add_collidable(element)
 
     def remove_element(self, element):
         """
-        Remove an element from the place.
+        Remove um elemento do cenário.
 
         Args:
-            element: The element to remove
+            element: O elemento a ser removido
         """
         if element in self.elements:
             self.elements.remove(element)
 
-        # If element is collidable, remove from collision framework
+        # Se o elemento é colidível, remove do framework de colisão
         if isinstance(element, Collidable):
             self.collision_framework.remove_collidable(element)
 
     def render(self):
-        """Render all elements in the place."""
+        """Renderiza todos os elementos do cenário."""
         for element in self.elements:
             element.render()
 
     def check_collision(self, x, z, radius=0.5):
         """
-        Check if a position collides with any element in the place.
+        Verifica se uma posição colide com algum elemento do cenário.
 
         Args:
-            x: X coordinate
-            z: Z coordinate
-            radius: Collision radius
+            x: Coordenada X
+            z: Coordenada Z
+            radius: Raio de colisão
 
         Returns:
-            bool: True if collision detected, False otherwise
+            bool: True se colisão detectada, False caso contrário
         """
         return self.collision_framework.check_collision(x, z, radius)

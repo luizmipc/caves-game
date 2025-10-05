@@ -1,6 +1,6 @@
 """
-Lantern module for player flashlight/torch effect.
-Creates a directional light cone illuminating what's ahead of the player.
+Módulo de lanterna para efeito de lanterna/tocha do jogador.
+Cria um cone de luz direcional iluminando o que está à frente do jogador.
 """
 
 from OpenGL.GL import *
@@ -8,15 +8,15 @@ import numpy as np
 
 
 class Lantern:
-    """Player's lantern that illuminates the area ahead."""
+    """Lanterna do jogador que ilumina a área à frente."""
 
     def __init__(self, light_radius=15.0, cone_angle=45.0):
         """
-        Initialize the lantern.
+        Inicializa a lanterna.
 
         Args:
-            light_radius: Maximum distance the light reaches
-            cone_angle: Angle of the light cone in degrees
+            light_radius: Distância máxima que a luz alcança
+            cone_angle: Ângulo do cone de luz em graus
         """
         self.light_radius = light_radius
         self.cone_angle = cone_angle
@@ -24,68 +24,68 @@ class Lantern:
 
     def setup(self, player_x, player_y, player_z, yaw, pitch):
         """
-        Setup the lantern light based on player position and view direction.
+        Configura a luz da lanterna com base na posição e direção de visão do jogador.
 
         Args:
-            player_x: Player X position
-            player_y: Player Y position
-            player_z: Player Z position
-            yaw: Player yaw angle (horizontal rotation)
-            pitch: Player pitch angle (vertical rotation)
+            player_x: Posição X do jogador
+            player_y: Posição Y do jogador
+            player_z: Posição Z do jogador
+            yaw: Ângulo yaw do jogador (rotação horizontal)
+            pitch: Ângulo pitch do jogador (rotação vertical)
         """
         if not self.is_on:
             return
 
-        # Enable lighting
+        # Habilita iluminação
         glEnable(GL_LIGHTING)
         glEnable(GL_LIGHT0)
 
-        # Position light at player position
+        # Posiciona a luz na posição do jogador
         glLightfv(GL_LIGHT0, GL_POSITION, [player_x, player_y, player_z, 1.0])
 
-        # Calculate direction vector from yaw and pitch
-        # Convert angles to radians
+        # Calcula vetor de direção a partir de yaw e pitch
+        # Converte ângulos para radianos
         yaw_rad = np.radians(yaw)
         pitch_rad = np.radians(pitch)
 
-        # Calculate direction (where player is looking)
+        # Calcula direção (para onde o jogador está olhando)
         dir_x = np.sin(yaw_rad) * np.cos(pitch_rad)
         dir_y = -np.sin(pitch_rad)
         dir_z = -np.cos(yaw_rad) * np.cos(pitch_rad)
 
-        # Set spotlight direction
+        # Define direção do holofote
         glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, [dir_x, dir_y, dir_z])
 
-        # Spotlight properties
-        glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, self.cone_angle)  # Cone angle
-        glLightf(GL_LIGHT0, GL_SPOT_EXPONENT, 15.0)  # Focus (higher = tighter beam)
+        # Propriedades do holofote
+        glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, self.cone_angle)  # Ângulo do cone
+        glLightf(GL_LIGHT0, GL_SPOT_EXPONENT, 15.0)  # Foco (maior = feixe mais estreito)
 
-        # Light colors - warm lantern glow
-        glLightfv(GL_LIGHT0, GL_DIFFUSE, [1.0, 0.9, 0.7, 1.0])  # Warm white/yellow
-        glLightfv(GL_LIGHT0, GL_AMBIENT, [0.05, 0.05, 0.05, 1.0])  # Very dim ambient
+        # Cores da luz - brilho quente da lanterna
+        glLightfv(GL_LIGHT0, GL_DIFFUSE, [1.0, 0.9, 0.7, 1.0])  # Branco/amarelo quente
+        glLightfv(GL_LIGHT0, GL_AMBIENT, [0.05, 0.05, 0.05, 1.0])  # Ambiente muito fraco
         glLightfv(GL_LIGHT0, GL_SPECULAR, [0.3, 0.3, 0.2, 1.0])
 
-        # Attenuation - how light fades with distance
+        # Atenuação - como a luz diminui com a distância
         glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION, 1.0)
         glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, 0.5 / self.light_radius)
         glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 1.0 / (self.light_radius * self.light_radius))
 
-        # Enable color material so objects show their colors
+        # Habilita material colorido para que objetos mostrem suas cores
         glEnable(GL_COLOR_MATERIAL)
         glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)
 
-        # Enable normals auto-normalization (important for lighting)
+        # Habilita auto-normalização de normais (importante para iluminação)
         glEnable(GL_NORMALIZE)
 
     def disable(self):
-        """Disable the lantern light."""
+        """Desabilita a luz da lanterna."""
         glDisable(GL_LIGHTING)
         glDisable(GL_LIGHT0)
         glDisable(GL_COLOR_MATERIAL)
         glDisable(GL_NORMALIZE)
 
     def toggle(self):
-        """Toggle the lantern on/off."""
+        """Alterna a lanterna ligada/desligada."""
         self.is_on = not self.is_on
         if not self.is_on:
             self.disable()

@@ -6,31 +6,31 @@ import numpy as np
 
 
 class PlayerEnemy:
-    """Enemy with texture that chases the player."""
+    """Inimigo com textura que persegue o jogador."""
 
     TEXTURE_PATH = "assets/textures/enemy.png"
 
     def __init__(self, x=0.0, y=1.7, z=0.0):
         """
-        Initialize player enemy.
+        Inicializa o inimigo jogador.
 
         Args:
-            x: X position
-            y: Y position
-            z: Z position
+            x: Posição X
+            y: Posição Y
+            z: Posição Z
         """
         self.x = x
         self.y = y
         self.z = z
-        self.size = 2.0  # Billboard size
-        self.detection_range = 15.0  # Range to detect player
-        self.chase_speed = 3.5  # Speed when chasing
+        self.size = 2.0  # Tamanho do billboard
+        self.detection_range = 15.0  # Alcance para detectar jogador
+        self.chase_speed = 3.5  # Velocidade ao perseguir
         self.is_chasing = False
         self.texture_id = self._load_texture()
 
     @classmethod
     def _load_texture(cls):
-        """Load enemy texture if it exists."""
+        """Carrega a textura do inimigo se ela existir."""
         if not os.path.exists(cls.TEXTURE_PATH):
             return None
 
@@ -38,7 +38,7 @@ class PlayerEnemy:
             texture_surface = pygame.image.load(cls.TEXTURE_PATH)
             texture_surface = texture_surface.convert_alpha()
 
-            # Flip texture vertically for OpenGL
+            # Inverte a textura verticalmente para o OpenGL
             texture_data = pygame.image.tostring(texture_surface, "RGBA", 1)
             width = texture_surface.get_width()
             height = texture_surface.get_height()
@@ -57,14 +57,14 @@ class PlayerEnemy:
 
     def can_see_player(self, player_x, player_z):
         """
-        Check if enemy can see the player.
+        Verifica se o inimigo pode ver o jogador.
 
         Args:
-            player_x: Player X position
-            player_z: Player Z position
+            player_x: Posição X do jogador
+            player_z: Posição Z do jogador
 
         Returns:
-            bool: True if player is in range
+            bool: True se o jogador está no alcance
         """
         dx = player_x - self.x
         dz = player_z - self.z
@@ -73,42 +73,42 @@ class PlayerEnemy:
 
     def update(self, delta_time, player_x, player_z, collision_check=None):
         """
-        Update enemy AI and movement.
+        Atualiza IA e movimento do inimigo.
 
         Args:
-            delta_time: Time since last update
-            player_x: Player X position
-            player_z: Player Z position
-            collision_check: Collision checking function
+            delta_time: Tempo desde a última atualização
+            player_x: Posição X do jogador
+            player_z: Posição Z do jogador
+            collision_check: Função de verificação de colisão
 
         Returns:
-            bool: True if enemy caught the player (collision detected), False otherwise
+            bool: True se o inimigo capturou o jogador (colisão detectada), False caso contrário
         """
-        # Check if we can see the player
+        # Verifica se podemos ver o jogador
         if self.can_see_player(player_x, player_z):
             self.is_chasing = True
 
-        # Chase the player if spotted
+        # Persegue o jogador se avistado
         if self.is_chasing:
             dx = player_x - self.x
             dz = player_z - self.z
             distance = np.sqrt(dx * dx + dz * dz)
 
-            # Check if enemy caught the player (collision detection)
-            if distance < 1.0:  # Caught within 1 unit - GAME OVER
+            # Verifica se o inimigo capturou o jogador (detecção de colisão)
+            if distance < 1.0:  # Capturado dentro de 1 unidade - GAME OVER
                 return True
 
-            if distance > 0.5:  # Don't move if too close
-                # Normalize direction
+            if distance > 0.5:  # Não se move se muito perto
+                # Normaliza direção
                 dx /= distance
                 dz /= distance
 
-                # Calculate new position
+                # Calcula nova posição
                 move_speed = self.chase_speed * delta_time
                 new_x = self.x + dx * move_speed
                 new_z = self.z + dz * move_speed
 
-                # Check collision with smaller radius for enemy (0.3 instead of default 0.5)
+                # Verifica colisão com raio menor para inimigo (0.3 ao invés de 0.5 padrão)
                 if collision_check is None or not collision_check(new_x, new_z, radius=0.3):
                     self.x = new_x
                     self.z = new_z
@@ -117,24 +117,24 @@ class PlayerEnemy:
 
     def render(self, player_x, player_z):
         """
-        Render the enemy as a billboard sprite facing the player.
+        Renderiza o inimigo como um sprite billboard virado para o jogador.
 
         Args:
-            player_x: Player X position for billboard orientation
-            player_z: Player Z position for billboard orientation
+            player_x: Posição X do jogador para orientação do billboard
+            player_z: Posição Z do jogador para orientação do billboard
         """
         glPushMatrix()
 
-        # Move to position
+        # Move para posição
         glTranslatef(self.x, self.y, self.z)
 
-        # Billboard: always face the player
+        # Billboard: sempre virado para o jogador
         dx = player_x - self.x
         dz = player_z - self.z
         angle = np.arctan2(dx, dz) * 180.0 / np.pi
         glRotatef(-angle, 0, 1, 0)
 
-        # Enable transparency
+        # Habilita transparência
         glEnable(GL_BLEND)
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 
@@ -143,10 +143,10 @@ class PlayerEnemy:
             glBindTexture(GL_TEXTURE_2D, self.texture_id)
             glColor4f(1.0, 1.0, 1.0, 1.0)
         else:
-            # Red square if no texture
+            # Quadrado vermelho se não houver textura
             glColor4f(1.0, 0.0, 0.0, 1.0)
 
-        # Draw billboard centered at position
+        # Desenha billboard centrado na posição
         half_size = self.size / 2
         glBegin(GL_QUADS)
         if self.texture_id:

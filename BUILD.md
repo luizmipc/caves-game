@@ -1,109 +1,109 @@
-# Building Dreamrooms Executable
+# Construindo o Executável do Dreamrooms
 
-This document explains how to build standalone executables for Dreamrooms.
+Este documento explica como construir executáveis autônomos para o Dreamrooms.
 
-## Prerequisites
+## Pré-requisitos
 
-1. **Install cx_Freeze:**
+1. **Instalar o cx_Freeze:**
 ```bash
 pip install cx_Freeze
 ```
 
-2. **Ensure all dependencies are installed:**
+2. **Garantir que todas as dependências estejam instaladas:**
 ```bash
 pip install -r requirements.txt
 ```
 
-## Building the Executable
+## Construindo o Executável
 
-### For Windows
+### Para Windows
 
-1. Open a terminal/command prompt on a **Windows machine**
-2. Navigate to the project directory
-3. Run the build command:
+1. Abra um terminal/prompt de comando em uma **máquina Windows**
+2. Navegue até o diretório do projeto
+3. Execute o comando de construção:
 ```bash
 python setup.py build
 ```
 
-The executable will be created in `build/exe.win-amd64-3.x/` (where 3.x is your Python version)
+O executável será criado em `build/exe.win-amd64-3.x/` (onde 3.x é sua versão do Python)
 
-### For Linux
+### Para Linux
 
-1. Open a terminal on a **Linux machine**
-2. Navigate to the project directory
-3. Run the build command:
+1. Abra um terminal em uma **máquina Linux**
+2. Navegue até o diretório do projeto
+3. Execute o comando de construção:
 ```bash
 python setup.py build
 ```
 
-The executable will be created in `build/exe.linux-x86_64-3.x/` (where 3.x is your Python version)
+O executável será criado em `build/exe.linux-x86_64-3.x/` (onde 3.x é sua versão do Python)
 
-## Important Notes
+## Notas Importantes
 
-### Platform-Specific Builds
-- **You MUST build on the target platform**
-- Windows executables can only be built on Windows
-- Linux executables can only be built on Linux
-- There is no cross-compilation support
+### Construções Específicas por Plataforma
+- **Você DEVE construir na plataforma de destino**
+- Executáveis Windows só podem ser construídos no Windows
+- Executáveis Linux só podem ser construídos no Linux
+- Não há suporte para compilação cruzada
 
-### What Gets Included
-The build process automatically includes:
-- Python interpreter
-- All required libraries (PyOpenGL, pygame, numpy)
-- The `assets/` folder (textures, audio)
-- All game modules (player, place, maze, light, etc.)
+### O Que É Incluído
+O processo de construção inclui automaticamente:
+- Interpretador Python
+- Todas as bibliotecas necessárias (PyOpenGL, pygame, numpy)
+- A pasta `assets/` (texturas, áudio)
+- Todos os módulos do jogo (player, place, maze, light, etc.)
 
-### File Size
-The executable will be approximately 50-150MB because it includes:
-- Python runtime
-- OpenGL libraries
-- Pygame libraries
-- NumPy libraries
-- All game assets
+### Tamanho do Arquivo
+O executável terá aproximadamente 50-150MB porque inclui:
+- Runtime do Python
+- Bibliotecas OpenGL
+- Bibliotecas Pygame
+- Bibliotecas NumPy
+- Todos os recursos do jogo
 
-## Distribution
+## Distribuição
 
-### Windows Distribution
-1. Navigate to `build/exe.win-amd64-3.x/`
-2. The entire folder is needed (not just the .exe)
-3. Zip the entire folder for distribution
-4. Users extract and run `Dreamrooms.exe`
+### Distribuição Windows
+1. Navegue até `build/exe.win-amd64-3.x/`
+2. A pasta inteira é necessária (não apenas o .exe)
+3. Compacte a pasta inteira para distribuição
+4. Os usuários extraem e executam `Dreamrooms.exe`
 
-### Linux Distribution
-1. Navigate to `build/exe.linux-x86_64-3.x/`
-2. The entire folder is needed (not just the executable)
-3. Create a tarball: `tar -czf Dreamrooms-Linux.tar.gz build/exe.linux-x86_64-3.x/`
-4. Users extract and run `./Dreamrooms`
+### Distribuição Linux
+1. Navegue até `build/exe.linux-x86_64-3.x/`
+2. A pasta inteira é necessária (não apenas o executável)
+3. Crie um tarball: `tar -czf Dreamrooms-Linux.tar.gz build/exe.linux-x86_64-3.x/`
+4. Os usuários extraem e executam `./Dreamrooms`
 
-## Troubleshooting
+## Solução de Problemas
 
-### Missing Assets
-If the game runs but has no textures or sound:
-- Check that the `assets/` folder is in the same directory as the executable
-- Verify `setup.py` has `"include_files": ["assets/"]`
+### Assets Ausentes
+Se o jogo executar mas não tiver texturas ou som:
+- Verifique se a pasta `assets/` está no mesmo diretório do executável
+- Verifique se `setup.py` tem `"include_files": ["assets/"]`
 
-### Import Errors
-If you get module not found errors:
-- Add the missing module to the `packages` list in `setup.py`
-- Rebuild with `python setup.py build`
+### Erros de Importação
+Se você receber erros de módulo não encontrado:
+- Adicione o módulo ausente à lista `packages` em `setup.py`
+- Reconstrua com `python setup.py build`
 
-### OpenGL Errors
-If you get OpenGL-related errors:
-- Ensure graphics drivers are up to date
-- Some systems may need to install OpenGL separately
+### Erros OpenGL
+Se você receber erros relacionados ao OpenGL:
+- Garanta que os drivers gráficos estejam atualizados
+- Alguns sistemas podem precisar instalar OpenGL separadamente
 
 ### "Cannot execute binary file"
-On Linux, ensure the executable has execute permissions:
+No Linux, garanta que o executável tenha permissões de execução:
 ```bash
 chmod +x Dreamrooms
 ```
 
-## Creating a Distributable Package
+## Criando um Pacote Distribuível
 
 ### Windows
 ```bash
 cd build/exe.win-amd64-3.x/
-# Zip the entire directory
+# Compacte o diretório inteiro
 ```
 
 ### Linux
@@ -112,33 +112,33 @@ cd build
 tar -czf Dreamrooms-Linux.tar.gz exe.linux-x86_64-3.x/
 ```
 
-## Alternative: Python Distribution
+## Alternativa: Distribuição Python
 
-If building executables is problematic, you can distribute the source code:
+Se a construção de executáveis for problemática, você pode distribuir o código-fonte:
 
-1. Include `requirements.txt`
-2. Provide installation instructions (see MANUAL.md)
-3. Users run `python main.py` after installing dependencies
+1. Incluir `requirements.txt`
+2. Fornecer instruções de instalação (veja MANUAL.md)
+3. Os usuários executam `python main.py` após instalar as dependências
 
-This is smaller and more reliable across different systems.
+Isso é menor e mais confiável em diferentes sistemas.
 
-## Adding an Icon (Optional)
+## Adicionando um Ícone (Opcional)
 
 ### Windows
-1. Create or obtain an `.ico` file
-2. Place it in the project root as `icon.ico`
-3. Update `setup.py`:
+1. Crie ou obtenha um arquivo `.ico`
+2. Coloque-o na raiz do projeto como `icon.ico`
+3. Atualize `setup.py`:
    ```python
    icon="icon.ico"
    ```
-4. Rebuild
+4. Reconstrua
 
 ### Linux
-Icons are handled differently - typically through desktop entry files.
+Ícones são tratados de forma diferente - normalmente através de arquivos desktop entry.
 
 ---
 
-For questions or issues, refer to:
-- [cx_Freeze Documentation](https://cx-freeze.readthedocs.io/)
-- MANUAL.md for game instructions
-- CODE_DOCUMENTATION.md for technical details
+Para dúvidas ou problemas, consulte:
+- [Documentação do cx_Freeze](https://cx-freeze.readthedocs.io/)
+- MANUAL.md para instruções do jogo
+- CODE_DOCUMENTATION.md para detalhes técnicos
