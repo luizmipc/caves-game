@@ -28,20 +28,7 @@ class Maze:
         """
         return MazeGenerator.generate(size, algorithm)
 
-    @staticmethod
-    def generate_rectangular(width=5, height=5, algorithm='prim'):
-        """
-        Gera um labirinto retangular aleatório.
-
-        Args:
-            width: Largura em células
-            height: Altura em células
-            algorithm: 'prim' (padrão, melhor ramificação) ou 'backtracking' (corredores longos)
-
-        Returns:
-            list: Grade 2D pronta para MazeFramework
-        """
-        return MazeGenerator.generate_rectangular(width, height, algorithm)
+    
 
     @staticmethod
     def build(grid, cell_size=5.0, wall_height=3.0):
