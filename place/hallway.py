@@ -1,5 +1,4 @@
 from .wall import Wall
-from .ceiling import Ceiling
 
 
 class Hallway:

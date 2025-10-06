@@ -1,7 +1,6 @@
 from .framework import PlaceFramework
 from .floor import Floor
 from .outside import Outside
-from maze.maze import Maze
 from maze.generator import MazeGenerator
 from player.player_enemy import PlayerEnemy
 from spawn.spawn import spawn_at_grid_center
